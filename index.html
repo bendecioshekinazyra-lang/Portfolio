@@ -11,7 +11,7 @@
             --paper: #fff6e3;
             --ink: #5a3e2b;
             --rose: #e58f9c;
-            --sky: linear-gradient(#bfe6ee 0%, #f9efd2 75%, #f6dfbd 100%);
+            --sky: linear-gradient(#6fb1ea 0%, #a6d2f3 26%, #f7e6c6 46%, #f3e5c8 100%);
             color-scheme: light dark
         }
 
@@ -19,14 +19,14 @@
             :root:not([data-theme="light"]) {
                 --paper: #3b3329;
                 --ink: #f6e8d0;
-                --sky: linear-gradient(#2b3d52, #5a5568 80%, #6d5d5a)
+                --sky: linear-gradient(#27384f, #56607a 30%, #e3c9a4 48%, #e8d4b0 100%)
             }
         }
 
         :root[data-theme="dark"] {
             --paper: #3b3329;
             --ink: #f6e8d0;
-            --sky: linear-gradient(#2b3d52, #5a5568 80%, #6d5d5a)
+            --sky: linear-gradient(#27384f, #56607a 30%, #e3c9a4 48%, #e8d4b0 100%)
         }
 
         * {
@@ -61,12 +61,13 @@
         #brand {
             position: fixed;
             z-index: 5;
-            left: max(14px, env(safe-area-inset-left));
+            right: max(14px, env(safe-area-inset-right));
             top: max(12px, env(safe-area-inset-top));
             background: var(--paper);
             padding: 9px 16px;
             border-radius: 20px;
-            box-shadow: 0 5px 0 rgba(0, 0, 0, .12)
+            box-shadow: 0 5px 0 rgba(0, 0, 0, .12);
+            text-align: right
         }
 
         #brand b {
@@ -165,7 +166,7 @@
             right: max(20px, env(safe-area-inset-right));
             top: 50%;
             width: min(420px, calc(100vw - 40px));
-            max-height: 78vh;
+            max-height: 74vh;
             overflow: auto;
             background: var(--paper);
             border-radius: 30px;
@@ -221,7 +222,7 @@
                 right: 50%;
                 top: auto;
                 bottom: calc(66px + env(safe-area-inset-bottom));
-                max-height: 50vh;
+                max-height: 46vh;
                 transform: translate(50%, 0) scale(.15)
             }
 
@@ -231,6 +232,10 @@
 
             #chips {
                 justify-content: flex-start
+            }
+
+            #brand small {
+                display: none
             }
         }
 
@@ -256,7 +261,7 @@
 
 <body>
     <div id="stage"></div>
-    <div id="brand"><b>🌿 Willow Hollow</b><small>Tap the critters, mushrooms &amp; flowers</small></div>
+    <div id="brand"><b>🌿 Willow Hollow</b><small>Tap the critters, signs &amp; flowers</small></div>
     <div id="tip"></div>
     <nav id="chips" aria-label="Sections"></nav>
     <aside id="panel" role="dialog" aria-labelledby="pt"><button id="x" aria-label="Close">×</button>
@@ -269,11 +274,11 @@
         (() => {
             // ===== EDIT YOUR PORTFOLIO CONTENT HERE: id:[emoji,title,html] =====
             const SEC = {
-                about: ['🐰', 'About Me', `<p>Hi, I’m <b>Shekina</b> – a designer who builds cozy, curious things for the web.</p><p>I love friendly interfaces, tiny details and strong cups of tea.</p>`],
+                about: ['🐰', 'About Me', `<p>Hi, I’m <b>Your Name</b> – a designer-developer who builds cozy, curious things for the web.</p><p>I love friendly interfaces, tiny details and strong cups of tea.</p>`],
                 projects: ['🍄', 'Projects', `<ul><li><b>Moss &amp; Co.</b> – a plant-shop storefront</li><li><b>Pocket Atlas</b> – an offline travel journal</li><li><b>Tea Timer</b> – a tiny, delightful PWA</li></ul>`],
                 contact: ['💌', 'Contact', `<p>Let’s make something lovely together.</p><p><a href="mailto:hello@example.com">hello@example.com</a><br><a href="https://github.com/yourname" target="_blank" rel="noopener">github.com/yourname</a></p>`],
                 skills: ['🌸', 'Skills', `<p>Things growing in my garden:</p><ul><li>React, Three.js, TypeScript</li><li>UI/UX &amp; motion design</li><li>Accessibility &amp; performance</li></ul>`],
-                experience: ['🪧', 'Experience', `<ul><li><b>2023–now</b> · Senior Front-end Dev, Acorn Studio</li><li><b>2020–23</b> · Product Designer, Maple Labs</li><li><b>2018–20</b> · Junior Developer, Clover Co.</li></ul>`],
+                experience: ['🌬️', 'Experience', `<ul><li><b>2023–now</b> · Senior Front-end Dev, Acorn Studio</li><li><b>2020–23</b> · Product Designer, Maple Labs</li><li><b>2018–20</b> · Junior Developer, Clover Co.</li></ul>`],
                 education: ['🏡', 'Education', `<p><b>BSc, Interaction Design</b><br>Your University, 2014–2018</p><p>Plus lots of late-night books and online courses.</p>`],
                 blog: ['🪷', 'Writing', `<ul><li>Making 3D feel cozy on the web</li><li>Small animations, big joy</li><li>Notes from a slow-tech garden</li></ul>`],
                 hobbies: ['🐱', 'Hobbies', `<p>Baking sourdough, pressing flowers, sketching birds, and napping in sunbeams (the cat insists).</p>`],
@@ -302,10 +307,11 @@
             const low = (navigator.hardwareConcurrency || 4) < 4 || matchMedia('(pointer:coarse)').matches, touchOnly = matchMedia('(hover:none)').matches, calm = matchMedia('(prefers-reduced-motion:reduce)').matches;
             renderer.setPixelRatio(Math.min(devicePixelRatio, low ? 1.5 : 2)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap;
             $('#stage').appendChild(renderer.domElement);
-            const scene = new T.Scene(), root = new T.Group(), cam = new T.PerspectiveCamera(32, 1, .1, 300); scene.add(root);
-            scene.add(new T.HemisphereLight(0xfff6e0, 0x9fc4a0, .95));
-            const sun = new T.DirectionalLight(0xffefd2, .95); sun.position.set(9, 15, 7); sun.castShadow = true; sun.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
-            const sc = sun.shadow.camera; sc.left = sc.bottom = -13; sc.right = sc.top = 13; sc.near = 1; sc.far = 45; sun.shadow.bias = -.0004; sun.shadow.radius = 4; scene.add(sun);
+            const scene = new T.Scene(), root = new T.Group(), cam = new T.PerspectiveCamera(34, 1, .1, 400); scene.add(root);
+            scene.fog = new T.Fog(0xf3e5c8, 30, 95);
+            scene.add(new T.HemisphereLight(0xcfe6ff, 0xe8c98c, .85));
+            const sun = new T.DirectionalLight(0xffe0aa, 1.05); sun.position.set(14, 13, 11); sun.castShadow = true; sun.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
+            const sc = sun.shadow.camera; sc.left = -16; sc.right = 16; sc.top = 14; sc.bottom = -14; sc.near = 1; sc.far = 60; sun.shadow.bias = -.0004; sun.shadow.radius = 4; scene.add(sun);
 
             // ---- helpers ----
             const SPH = new T.SphereGeometry(1, 20, 14), M = (c, o) => new T.MeshStandardMaterial(Object.assign({ color: c, roughness: .8 }, o));
@@ -314,66 +320,96 @@
             const cyl = (a, b, h, c, x, y, z, s = 20, o) => mk(new T.CylinderGeometry(a, b, h, s), c, x, y, z, o);
             const box = (w, h, d, c, x, y, z) => mk(new T.BoxGeometry(w, h, d), c, x, y, z);
             const cone = (r, h, c, x, y, z, s = 12) => mk(new T.ConeGeometry(r, h, s), c, x, y, z);
+            const GL = { emissive: 0xffd36b, emissiveIntensity: .7 };
             const hit = (g, r, y) => { const m = new T.Mesh(new T.SphereGeometry(r, 8, 6), new T.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })); m.position.y = y; m.userData.hit = 1; g.add(m) };
             const hot = [];
             function R(g, id, lab, top, x, z, ry, s, o) {
-                s = s || 1; g.position.set(x, 0, z); g.rotation.y = ry || 0; g.scale.setScalar(s); const u = g.userData; u.parts = u.parts || {};
-                Object.assign(u, { id, lab, top: top * s, s0: s, r0: ry || 0, k: 0 }, o);
+                s = s || 1; o = o || {}; g.position.set(x, o.y || 0, z); g.rotation.y = ry || 0; g.scale.setScalar(s); const u = g.userData; u.parts = u.parts || {};
+                Object.assign(u, { id, lab, top: top * s, s0: s, y0: o.y || 0, r0: ry || 0, k: 0 }, o);
                 if (u.blob) { const b = new T.Mesh(new T.CircleGeometry(u.blob * s, 24), new T.MeshBasicMaterial({ color: 0x2d4a35, transparent: true, opacity: .2, depthWrite: false })); b.rotation.x = -Math.PI / 2; b.position.set(x, .03, z); root.add(b) }
                 if (u.dot) { const d = document.createElement('div'); d.className = 'dot'; document.body.appendChild(d); u.dotEl = d }
                 root.add(g); hot.push(g); if (!byId[id] || u.main) byId[id] = g; return g
             }
 
-            // ---- island ----
-            root.add(cyl(9.6, 9.6, .5, 0x9fcf94, 0, -.25, 0, 64), cyl(9.4, 6.4, 2.4, 0x8a5f3f, 0, -1.7, 0, 48));
-            root.children.forEach(m => m.castShadow = false);
-            for (let i = 0; i < 7; i++) { const p = ell(1.2 + i % 3 * .4, i % 2 ? 0xaed99e : 0x93c58b, Math.sin(i * 2.3) * 6, .02, Math.cos(i * 2.3) * 6, 1, .03, 1); p.castShadow = false; root.add(p) }
-            const clouds = []; for (let i = 0; i < 4; i++) {
-                const c = new T.Group();[[0, 0, 1], [1, .2, .8], [-1, .1, .75], [.3, .5, .7]].forEach(a => c.add(ell(a[2], 0xffffff, a[0] * .9, a[1], 0, 1, .7, .8, { emissive: 0xffffff, emissiveIntensity: .4 })));
-                c.traverse(m => m.castShadow = false); c.position.set(-20 + i * 12, 12 + i % 2 * 2, -12 - i * 3); c.scale.setScalar(1.7); root.add(c); clouds.push(c)
+            // ---- world: ground, rolling hills, pines, clouds ----
+            const g0 = mk(new T.PlaneGeometry(260, 260), 0x95c76b, 0, 0, -30); g0.rotation.x = -Math.PI / 2; g0.castShadow = false; root.add(g0);
+            const hills = [[-6, -24, 14, .5, 0x8fc16a], [14, -27, 16, .42, 0x9ccb72], [-27, -22, 14, .5, 0x86b862], [28, -20, 14, .45, 0x93c46b], [0, -36, 24, .45, 0xa6cf80], [-12, -12, 8, .22, 0x9acb70], [18, -10, 7, .25, 0x9ccb72]];
+            const H = (x, z) => Math.max(0, ...hills.map(h => { const d = ((x - h[0]) ** 2 + (z - h[1]) ** 2) / (h[2] * h[2]); return d < 1 ? h[3] * h[2] * Math.sqrt(1 - d) : 0 }));
+            hills.forEach(h => { const m = ell(h[2], h[4], h[0], 0, h[1], 1, h[3], 1); m.castShadow = false; root.add(m) });
+            function pine(x, z, s) {
+                const g = new T.Group(), y = H(x, z) - .15; g.add(cyl(.2, .3, 1, 0x7a5638, 0, .5, 0, 8), cone(1.5, 2.4, 0x4f8f5a, 0, 2, 0, 9), cone(1.2, 2.1, 0x5a9c63, 0, 3.3, 0, 9), cone(.85, 1.8, 0x66a86c, 0, 4.5, 0, 9));
+                g.position.set(x, y, z); g.scale.setScalar(s); g.traverse(m => m.castShadow = false); root.add(g)
             }
+            for (let i = 0; i < 22; i++) { const x = -38 + i * 3.6 + Math.sin(i * 7) * 2, z = -13 - (i % 4) * 5 - Math.cos(i) * 2; if (H(x, z) > .8) pine(x, z, 1 + (i % 3) * .25) }
+            [[10.8, -7, 1.6], [13, -5, 1.3], [-13, -8, 1.4], [-15, -5, 1.2]].forEach(p => pine(p[0], p[1], p[2]));
+            const clouds = [];[[-34, 13], [-8, 17], [16, 12], [38, 16]].forEach((a, i) => {
+                const c = new T.Group();[[0, 0, 1.3], [1.4, .2, 1], [-1.4, .1, 1], [.3, .7, .9], [2.5, -.1, .7]].forEach(b => c.add(ell(b[2], 0xffffff, b[0], b[1], 0, 1, .7, .8, { emissive: 0xffffff, emissiveIntensity: .5 })));
+                c.traverse(m => { m.castShadow = false; if (m.material) m.material.fog = false }); c.position.set(a[0], a[1], -55); c.scale.setScalar(5); root.add(c); clouds.push(c)
+            });
             function path(pts) {
-                const cu = new T.CatmullRomCurve3(pts.map(p => new T.Vector3(p[0], 0, p[1]))), n = Math.floor(cu.getLength() / .75);
-                for (let i = 0; i <= n; i++) { const p = cu.getPoint(i / n), m = ell(.4 + (i * 7 % 3) * .05, 0xd9d0bf, p.x + Math.sin(i * 5) * .18, .03, p.z + Math.cos(i * 3) * .18, 1, .25, .85); m.rotation.y = i; m.castShadow = false; root.add(m) }
+                const cu = new T.CatmullRomCurve3(pts.map(p => new T.Vector3(p[0], 0, p[1]))), n = Math.floor(cu.getLength() / .8);
+                for (let i = 0; i <= n; i++) { const p = cu.getPoint(i / n), m = ell(.55 + (i * 7 % 3) * .07, 0xdccfbc, p.x + Math.sin(i * 5) * .15, .03, p.z + Math.cos(i * 3) * .12, 1, .2, .8); m.rotation.y = i; m.castShadow = false; root.add(m) }
             }
-            path([[-5.8, 1.2], [-3.8, .1], [-1.5, -.3], [1.2, -.4], [1.4, 1.4], [2.4, 3], [3.3, 3.4]]); path([[-2.3, -2.3], [-1.6, -1.2], [-1.5, -.3]]); path([[1.2, -.4], [2.6, -1.8], [3.4, -2.6]]);
+            path([[.4, 10], [1.6, 7], [2.2, 4.6], [3.6, 2.8], [4.6, 1.6], [5.2, .9]]);
 
             // ---- assets ----
+            function board(txt, icon, col) {
+                const g = new T.Group(), c = document.createElement('canvas'); c.width = 512; c.height = 128; const x = c.getContext('2d'), tex = new T.CanvasTexture(c);
+                const draw = () => {
+                    x.fillStyle = col; x.fillRect(0, 0, 512, 128); x.strokeStyle = 'rgba(90,55,30,.22)'; for (let i = 0; i < 7; i++) { x.beginPath(); x.moveTo(0, 10 + i * 18); x.lineTo(512, 14 + i * 18); x.stroke() }
+                    x.font = '600 56px Fredoka,sans-serif'; x.textBaseline = 'middle'; x.fillStyle = 'rgba(90,55,30,.4)'; x.fillText(icon + ' ' + txt, 40, 70); x.fillStyle = '#fff3da'; x.fillText(icon + ' ' + txt, 38, 66); tex.needsUpdate = true
+                };
+                draw(); document.fonts && document.fonts.ready.then(draw);
+                const mats = [0, 1, 2, 3, 4, 5].map(i => i === 4 ? new T.MeshStandardMaterial({ map: tex, roughness: .85 }) : M(0xb07a45)), b = new T.Mesh(new T.BoxGeometry(3.2, .9, .22), mats); b.castShadow = true; g.add(b);
+                const t = cone(.45, .5, 0xb07a45, 1.85, 0, 0, 3); t.rotation.z = -Math.PI / 2; g.add(t); return g
+            }
+            function bigTree() {
+                const g = new T.Group(), f = new T.Group(), br = 0x8a5a3a; g.add(cyl(1, 1.5, 9, br, -8.5, 4.5, -1, 14));
+                const b = mk(new T.CylinderGeometry(.35, .6, 6.4, 10), br, -5.7, 6, -1); b.rotation.z = -1.1; g.add(b);
+                [[-9, 7.4, 0, 2.5, 0xa9c852], [-6.4, 8.1, .4, 2.2, 0x95bd4b], [-3.9, 7.1, 1.2, 1.7, 0xb7d160], [-10.4, 5.8, 1, 1.9, 0x9ec44f], [-7.6, 6.6, 2, 1.7, 0xb2cf5a], [-3.4, 6.4, 1.8, 1.2, 0xa4c64f], [-5.4, 8.9, -.5, 2.1, 0xa9c852], [-8.2, 9.2, .8, 2.3, 0x95bd4b]].forEach(a => f.add(ell(a[3], a[4], a[0], a[1], a[2])));
+                g.add(f); g.userData.parts = { f }; return g
+            }
+            function lantern() {
+                const g = new T.Group(); g.add(cyl(.02, .02, 1.6, 0x4a3526, 0, 1.3, 0, 6), box(.5, .08, .5, 0x6b4429, 0, .62, 0), box(.5, .08, .5, 0x6b4429, 0, -.55, 0), ell(.3, 0xffe6a0, 0, .03, 0, 1, 1.8, 1, { emissive: 0xffd36b, emissiveIntensity: 1 }), cone(.4, .3, 0x6b4429, 0, .85, 0, 4));
+                const l = new T.PointLight(0xffd88a, .8, 9); g.add(l); g.userData.parts = { l }; hit(g, .6, 0); return g
+            }
             function cottage() {
-                const g = new T.Group(), win = [];
-                g.add(cyl(1.85, 1.95, .35, 0xd3cabb, 0, .18, 0, 28), cyl(1.7, 1.78, 2.1, 0xfbefd6, 0, 1.4, 0, 28), cone(2.5, 1.9, 0xe7a3a8, 0, 3.4, 0, 28), cyl(.28, .3, 1, 0xb98a6a, .9, 3.7, -.4),
-                    box(.85, 1, .14, 0x9a6440, 0, .85, 1.78), cyl(.425, .425, .14, 0x9a6440, 0, 1.35, 1.78, 16), ell(.05, 0xf7dc86, .25, .85, 1.87));
-                g.children[5].rotation.x = 0; g.children[5].rotation.x = Math.PI / 2;
-                const fc = [0xfff8e8, 0xf7dc86, 0xf5b5c5, 0xc9b6ee];
-                for (let i = 0; i < 36; i++) { const a = i * 2.4, f = .08 + (i * 37 % 82) / 100; g.add(ell(.17, fc[i % 4], Math.sin(a) * (2.5 * (1 - f) + .05), 2.5 + 1.9 * f, Math.cos(a) * (2.5 * (1 - f) + .05))) }
-                [-.95, .95].forEach(a => {
-                    const w = ell(.36, 0xffe6a0, Math.sin(a) * 1.74, 1.55, Math.cos(a) * 1.74, 1, 1, .3, { emissive: 0xffd36b, emissiveIntensity: .7 }); w.rotation.y = a; win.push(w);
-                    const f = mk(new T.TorusGeometry(.38, .07, 8, 20), 0x9a6440, Math.sin(a) * 1.76, 1.55, Math.cos(a) * 1.76); f.rotation.y = a; g.add(w, f)
-                });
+                const g = new T.Group(), win = [], cr = 0xfbefd6, br = 0x8a5a3a; g.add(box(6, 3.2, 4.4, cr, 0, 1.6, 0), box(6.2, .35, 4.6, 0xcdbfa6, 0, .17, 0));
+                const gp = cyl(3.46, 3.46, 4.4, cr, 0, 4.07, 0, 3); gp.rotation.x = -Math.PI / 2; gp.scale.set(1, 1, .5); g.add(gp);
+                [[1, -1], [-1, 1]].forEach(a => { const s = box(4.7, .3, 5.2, 0xd9795a, a[0] * 1.6, 4.62, 0); s.rotation.z = a[1] * .714; g.add(s) });
+                g.add(box(1, 2.4, 1, 0xcdb899, 2, 5.2, -.9), box(1.25, .2, 1.25, 0xb8a285, 2, 6.5, -.9), box(1.4, 1.9, .2, 0x9a6440, 0, .95, 2.25), cyl(.7, .7, .2, 0x9a6440, 0, 1.9, 2.25, 20)); g.children[g.children.length - 1].rotation.x = Math.PI / 2;
+                g.add(mk(new T.TorusGeometry(.82, .13, 8, 20, Math.PI), 0xc9b79a, 0, 1.9, 2.2), box(.2, 1.9, .25, 0xc9b79a, -.82, .95, 2.2), box(.2, 1.9, .25, 0xc9b79a, .82, .95, 2.2), ell(.08, 0x6b4429, .45, 1, 2.38));
+                const gw = (x, y, r, fl) => {
+                    const w = ell(r, 0xffe6a0, x, y, 2.32, 1, 1, .2, GL); win.push(w); g.add(w, mk(new T.TorusGeometry(r, .08, 8, 20), br, x, y, 2.3));
+                    if (fl) { g.add(box(1.3, .3, .35, br, x, y - .85, 2.45)); for (let i = 0; i < 5; i++)g.add(ell(.15, [0xf5b5c5, 0xfff8e8, 0xf7dc86][i % 3], x - .5 + i * .25, y - .58, 2.5)) }
+                };
+                gw(0, 1.72, .32); gw(-2.1, 1.8, .5, 1); gw(2.2, 1.8, .5, 1); gw(0, 4.25, .4);
+                [-1, 1].forEach(s => g.add(box(.35, 1.4, .1, br, -2.1 + s * .85, 1.8, 2.3), box(.35, 1.4, .1, br, 2.2 + s * .85, 1.8, 2.3), box(.3, .9, .1, br, s * .72, 4.25, 2.3)));
+                for (let i = 0; i < 10; i++)g.add(ell(.3, 0x6e9f58, -3.05 + Math.sin(i) * .15, .5 + i * .38, 2.25));
+                for (let i = 0; i < 9; i++)g.add(ell(.27, 0x6e9f58, -3 + i * .15, 3.4 + i * .26, 2.55 - i * .02), ell(.1, 0xf5b5c5, -3.1 + i * .2, 3.45 + i * .24, 2.8));
+                g.add(box(.1, .1, .4, 0x4a3526, 3.15, 2.5, 2.4), ell(.18, 0xffe6a0, 3.15, 2.2, 2.55, 1, 1.4, 1, { emissive: 0xffd36b, emissiveIntensity: 1 }));
                 g.userData.parts = { win }; return g
             }
             function mush(main, cap) {
                 const g = new T.Group(), cg = new T.Group(), win = [];
                 g.add(cyl(.55, .75, 1.5, 0xfdf1dc, 0, .75, 0)); cg.position.y = 1.4;
                 const d = mk(new T.SphereGeometry(1.5, 28, 16, 0, Math.PI * 2, 0, Math.PI / 2), cap); d.scale.y = .8; cg.add(d, cyl(1.45, 1.2, .12, 0xe9d3b0, 0, 0, 0, 28));
-                for (let i = 0; i < 9; i++) { const th = .3 + (i * 13 % 7) * .1, ph = i * 2.4, x = 1.5 * Math.sin(th) * Math.sin(ph), z = 1.5 * Math.sin(th) * Math.cos(ph), y = 1.2 * Math.cos(th); const o = ell(.2, 0xfffaf0, x, y, z, 1, .4, 1); o.lookAt(x * 3, y * 3 + 2, z * 3); cg.add(o) }
+                for (let i = 0; i < 9; i++) { const th = .3 + (i * 13 % 7) * .1, ph = i * 2.4, x = 1.5 * Math.sin(th) * Math.sin(ph), z = 1.5 * Math.sin(th) * Math.cos(ph), y = 1.2 * Math.cos(th), o = ell(.2, 0xfffaf0, x, y, z, 1, .4, 1); o.lookAt(x * 3, y * 3 + 2, z * 3); cg.add(o) }
                 g.add(cg);
-                if (main) {
-                    g.add(box(.5, .8, .1, 0x9a6440, 0, .45, .7), cyl(.25, .25, .1, 0x9a6440, 0, .85, .7, 14)); g.children[g.children.length - 1].rotation.x = Math.PI / 2;
-                    const w = ell(.2, 0xffe6a0, .5, 1.0, .4, 1, 1, .3, { emissive: 0xffd36b, emissiveIntensity: .6 }); w.rotation.y = .9; win.push(w); g.add(w)
-                }
+                if (main) { g.add(box(.5, .8, .1, 0x9a6440, 0, .45, .7)); const w = ell(.2, 0xffe6a0, .5, 1, .4, 1, 1, .3, GL); w.rotation.y = .9; win.push(w); g.add(w) }
                 g.userData.parts = { cap: cg, win }; return g
             }
-            function tree() {
-                const g = new T.Group(), f = new T.Group(); g.add(cyl(.28, .4, 1.8, 0x9a6a47, 0, .9, 0, 10));
-                f.add(ell(1.25, 0x86bf8a, 0, 2.5, 0, 1, 1.05, 1), ell(.9, 0x95cc92, .8, 2.1, .4), ell(.85, 0x7cb482, -.8, 2, -.3), ell(.12, 0xf5b5c5, .3, 3.55, .6), ell(.12, 0xfff8e8, -.7, 3.2, .5), ell(.12, 0xf7dc86, .9, 2.9, .7)); g.add(f); g.userData.parts = { f }; return g
-            }
             function rabbit() {
-                const g = new T.Group(), w = 0xfffaf0, head = new T.Group(); head.position.set(0, 1.15, .5);
-                g.add(ell(.62, w, 0, .6, 0, 1, .95, 1.2), ell(.2, w, 0, .45, -.75), ell(.18, w, -.25, .1, .55, 1, .6, 1.4), ell(.18, w, .25, .1, .55, 1, .6, 1.4));
-                head.add(ell(.46, w, 0, 0, 0, 1.05, .95, 1), ell(.07, 0xf08ca0, 0, -.02, .44, 1, .7, .7));
-                [-1, 1].forEach(s => { const e = new T.Group(); e.position.set(s * .2, .35, -.05); e.rotation.z = -s * .12; e.add(ell(.15, w, 0, .4, 0, 1, 3, .6), ell(.09, 0xf5b5c5, 0, .4, .07, 1, 2.6, .4)); head.add(e, ell(.06, 0x3b2a2a, s * .2, .07, .4), ell(.1, 0xf7b8c0, s * .27, -.12, .33, 1, .7, .5)) });
-                g.add(head); hit(g, .9, .9); g.userData.parts = { head }; return g
+                const g = new T.Group(), w = 0xfffaf0, head = new T.Group(); head.position.set(0, 1.35, .5);
+                g.add(ell(.62, w, 0, .6, 0, 1, .95, 1.2), ell(.2, w, 0, .45, -.75), ell(.2, w, -.38, .86, .68, 1, .7, 1.3), ell(.2, w, .38, .86, .68, 1, .7, 1.3));
+                head.add(ell(.46, w, 0, 0, 0, 1.05, .95, 1), ell(.07, 0xf08ca0, 0, -.02, .44, 1, .7, .7), ell(.1, 0xf7b8c0, -.3, -.1, .33, 1, .7, .5), ell(.1, 0xf7b8c0, .3, -.1, .33, 1, .7, .5));
+                [-1, 1].forEach(s => {
+                    const e = new T.Group(); e.position.set(s * .22, .35, -.05); e.rotation.z = -s * .12; e.add(ell(.15, w, 0, .4, 0, 1, 3, .6), ell(.09, 0xf5b5c5, 0, .4, .07, 1, 2.6, .4)); head.add(e);
+                    const eye = ell(.07, 0x3b2a2a, s * .19, .07, .4); head.add(eye)
+                });
+                head.add(cyl(.78, .78, .05, 0xe3b66f, 0, .36, 0, 24), cyl(.4, .46, .22, 0xe9c27e, 0, .46, -.02, 20), mk(new T.TorusGeometry(.43, .05, 6, 20), 0x7fae6a, 0, .4, -.02), ell(.1, 0xfffaf0, .22, .52, .35, 1, .5, 1), ell(.05, 0xf7dc86, .22, .54, .35));
+                head.children[head.children.length - 4].rotation.x = 0; head.children[head.children.length - 3].rotation.x = Math.PI / 2;
+                g.add(head); hit(g, .9, 1); g.userData.parts = { head }; return g
             }
             function cat() {
                 const g = new T.Group(), o = 0xf2a65a, tail = new T.Group(); tail.position.set(0, .35, -.7);
@@ -392,25 +428,20 @@
                 hit(g, .9, .7); return g
             }
             function mailbox() {
-                const g = new T.Group(), bx = new T.Group(), door = new T.Group(), flag = new T.Group(), env = new T.Group(); bx.position.y = 1.75;
-                g.add(cyl(.12, .14, 1.7, 0x9a6a47, 0, .85, 0, 10)); bx.add(ell(.55, 0xe97b7b, 0, 0, 0, 1, .9, 1.5));
-                door.position.set(0, -.45, .8); const dd = cyl(.5, .5, .06, 0xd96a6a, 0, .4, 0, 20); dd.rotation.x = Math.PI / 2; dd.scale.z = .9; door.add(dd);
-                flag.position.set(.6, .1, .1); flag.rotation.z = -1.5; flag.add(box(.06, .7, .06, 0xb98a6a, 0, .35, 0), box(.36, .22, .05, 0xf7dc86, .2, .6, 0));
+                const g = new T.Group(), bx = new T.Group(), door = new T.Group(), flag = new T.Group(), env = new T.Group(), cr = 0xf3e6c8; bx.position.y = 1.75;
+                g.add(cyl(.12, .14, 1.7, 0x9a6a47, 0, .85, 0, 10), box(1.4, .18, .9, 0x9a6a47, 0, .2, 0)); bx.add(ell(.55, cr, 0, 0, 0, 1, .9, 1.5));
+                door.position.set(0, -.45, .8); const dd = cyl(.5, .5, .06, 0xe6d6b2, 0, .4, 0, 20); dd.rotation.x = Math.PI / 2; dd.scale.z = .9; door.add(dd);
+                const ca = cone(.1, .4, 0xf2a65a, .5, 0, .4, 8); ca.rotation.z = Math.PI / 2.5; bx.add(ca, ell(.08, 0x6fae75, .74, .1, .4));
+                flag.position.set(.6, .1, .1); flag.rotation.z = -1.5; flag.add(box(.06, .7, .06, 0xb98a6a, 0, .35, 0), box(.36, .22, .05, 0xe9605f, .2, .6, 0));
                 env.add(box(.5, .34, .04, 0xfffaf0, 0, 0, 0), ell(.07, 0xf08ca0, 0, 0, .03, 1, 1, .3)); env.position.set(0, 0, .3); env.visible = false;
                 bx.add(door, flag, env); g.add(bx); hit(g, .9, 1.7); g.userData.parts = { door, flag, env }; return g
             }
-            function sign() {
-                const g = new T.Group(); g.add(cyl(.12, .15, 2.3, 0x9a6a47, 0, 1.15, 0, 10));
-                [[1.8, 0, 0xe0b27a], [1.35, Math.PI, 0xf0c98e]].forEach((a, i) => { const b = new T.Group(); b.position.y = a[0]; b.rotation.y = a[1] + (i ? .3 : -.25); b.add(box(1.5, .4, .12, a[2], .7, 0, 0), cone(.28, .4, a[2], 1.58, 0, 0, 3)); b.children[1].rotation.z = -Math.PI / 2; g.add(b) });
-                g.add(ell(.2, 0xf7dc86, 0, 2.4, 0)); hit(g, .8, 1.4); return g
-            }
-            function flowers() {
-                const g = new T.Group(), heads = [], cs = [0xf5b5c5, 0xf7dc86, 0xfff8e8, 0xc9b6ee, 0xf2a65a];
-                for (let i = 0; i < 10; i++) {
-                    const a = i * 2.4, r = .25 + i % 5 * .28, h = .7 + (i * 7 % 5) * .15, f = new T.Group(); f.position.set(Math.cos(a) * r, 0, Math.sin(a) * r); f.add(cyl(.04, .05, h, 0x6fae75, 0, h / 2, 0, 6));
-                    const hd = new T.Group(); hd.position.y = h; for (let p = 0; p < 6; p++)hd.add(ell(.17, cs[i % 5], Math.cos(p * 1.047) * .2, 0, Math.sin(p * 1.047) * .2, 1, .6, 1)); hd.add(ell(.1, i % 5 == 1 ? 0xf2a65a : 0xf7dc86, 0, .04, 0)); f.add(hd, ell(.15, 0x7cbf82, .12, h * .4, 0, 1, .3, .6)); heads.push(hd); g.add(f)
-                }
-                g.add(ell(1.5, 0x8ac883, 0, .02, 0, 1, .08, 1)); hit(g, 1.5, .6); g.userData.parts = { heads }; return g
+            function windmill() {
+                const g = new T.Group(), bl = new T.Group();
+                g.add(cyl(1.2, 1.9, 4.2, 0xf6ead2, 0, 2.1, 0, 20), cone(1.6, 1.6, 0xc4623f, 0, 5, 0, 20), box(.7, 1.1, .2, 0x8a5a3c, 0, .55, 1.75), ell(.3, 0xffe0a0, 0, 3.2, 1.5, 1, 1, .4, GL));
+                bl.position.set(0, 4, 1.4); const hub = cyl(.22, .22, .5, 0x8a5a3c, 0, 0, 0, 10); hub.rotation.x = Math.PI / 2; bl.add(hub);
+                for (let i = 0; i < 4; i++) { const a = new T.Group(); a.rotation.z = i * Math.PI / 2; a.add(box(.18, 3.8, .1, 0x8a5a3c, 0, 2.1, 0), box(.9, 2.2, .05, 0xe7b8a0, .5, 2.6, .06)); bl.add(a) }
+                g.add(bl); g.userData.parts = { blades: bl }; hit(g, 2.2, 3); return g
             }
             function pond() {
                 const g = new T.Group(), pads = []; g.add(cyl(2.2, 2.2, .14, 0x8fd3dc, 0, .02, 0, 40, { roughness: .15, metalness: .15 }));
@@ -418,12 +449,20 @@
                 [[-.6, .5], [.7, -.3], [0, -.9]].forEach(p => { const l = cyl(.42, .42, .05, 0x7cbf7f, p[0], .1, p[1], 16); pads.push(l); g.add(l) }); g.add(ell(.18, 0xf5b5c5, -.6, .25, .5, 1, .8, 1));
                 const ring = mk(new T.RingGeometry(.9, 1.05, 32), 0xffffff, 0, .12, 0, { transparent: true, opacity: 0 }); ring.rotation.x = -Math.PI / 2; ring.castShadow = false; g.add(ring); g.userData.parts = { ring, pads }; return g
             }
-            function books() { const g = new T.Group(); g.add(box(.9, .2, .6, 0xe58f9c, 0, .1, 0), box(.8, .2, .55, 0x8fbf8f, 0, .3, 0), box(.7, .2, .5, 0xf7dc86, .05, .5, 0)); g.children.forEach((c, i) => c.rotation.y = i * .35); hit(g, .6, .4); return g }
-            function lantern() {
-                const g = new T.Group(); g.add(cyl(.06, .08, 1.2, 0x6b4429, 0, .6, 0, 8), box(.4, .08, .4, 0x6b4429, 0, 1.25, 0), ell(.26, 0xffe6a0, 0, 1.5, 0, 1, 1.2, 1, { emissive: 0xffd36b, emissiveIntensity: 1 }), cone(.3, .25, 0x6b4429, 0, 1.85, 0, 4));
-                const l = new T.PointLight(0xffd88a, .7, 6); l.position.y = 1.5; g.add(l); g.userData.parts = { l }; hit(g, .5, 1.4); return g
+            function hydra() {
+                const g = new T.Group(), heads = [], cs = [0xb9a7ee, 0xa6b4ee, 0xcdb3ee];
+                for (let k = 0; k < 3; k++) {
+                    const h = new T.Group(); h.position.set((k - 1) * 1.05, .85 + k % 2 * .2, k % 2 * .3);
+                    for (let i = 0; i < 16; i++) { const a = i * 2.4, rr = .12 + (i * 5 % 7) * .07; h.add(ell(.22, cs[(i + k) % 3], Math.cos(a) * rr, .35 * Math.sqrt(Math.max(0, 1 - (rr / .65) ** 2)), Math.sin(a) * rr)) }
+                    g.add(h, ell(.6, 0x6aa563, (k - 1) * 1.05, .4, 0, 1, .45, 1.1)); heads.push(h)
+                }
+                hit(g, 1.8, .7); g.userData.parts = { heads }; return g
             }
-            function can() { const g = new T.Group(); g.add(cyl(.35, .35, .5, 0x9cc5d8, 0, .25, 0), cyl(.05, .08, .6, 0x9cc5d8, .45, .5, 0, 8), mk(new T.TorusGeometry(.2, .04, 6, 12), 0x9cc5d8, -.35, .3, 0)); g.children[1].rotation.z = -.9; hit(g, .55, .3); return g }
+            function basket() {
+                const g = new T.Group(); g.add(cyl(.7, .55, .6, 0xb98650, 0, .3, 0, 16), mk(new T.TorusGeometry(.6, .06, 6, 16, Math.PI), 0xb98650, 0, .6, 0));
+                for (let i = 0; i < 9; i++) { const a = i * 2.4, r = .1 + (i % 3) * .17; g.add(ell(.17, 0xfff8e8, Math.cos(a) * r, .72 + (i % 3) * .06, Math.sin(a) * r, 1, .4, 1), ell(.07, 0xf7dc86, Math.cos(a) * r, .76 + (i % 3) * .06, Math.sin(a) * r)) }
+                hit(g, .8, .5); return g
+            }
             function bird() {
                 const g = new T.Group(), lw = new T.Group(), rw = new T.Group(); g.add(ell(.35, 0x8fc7e8, 0, .35, 0, 1, .95, 1.2), ell(.22, 0x8fc7e8, 0, .7, .25), ell(.04, 0x2b2b2b, -.1, .76, .42), ell(.04, 0x2b2b2b, .1, .76, .42), cone(.07, .2, 0xf2a65a, 0, .7, .5, 6), cone(.12, .35, 0x6fa8cc, 0, .3, -.4, 4));
                 g.children[4].rotation.x = Math.PI / 2; g.children[5].rotation.x = -Math.PI / 2;
@@ -438,86 +477,97 @@
                 const g = new T.Group(); g.add(ell(.8, 0x7fba85, 0, .55, 0, 1, .8, 1), ell(.6, 0x8cc690, .6, .4, .2), ell(.55, 0x75b27c, -.55, .4, -.1));
                 [0xf5b5c5, 0xfff8e8, 0xf7dc86].forEach((c, i) => g.add(ell(.1, c, Math.sin(i * 2) * .7, .85 + (i % 2) * .1, Math.cos(i * 2) * .5))); g.position.set(x, 0, z); g.scale.setScalar(s); root.add(g)
             }
+            function fence(x0, x1, z) {
+                const g = new T.Group(), wd = 0xc8935c; for (let x = x0; x <= x1 + .1; x += 1.6)g.add(box(.5, 1.9, .4, 0xb98050, x, .95, z));
+                const L = x1 - x0 + .8; g.add(box(L, .45, .25, wd, (x0 + x1) / 2, .6, z + .12), box(L, .45, .25, wd, (x0 + x1) / 2, 1.3, z + .12)); g.traverse(m => m.isMesh && (m.userData.fence = 1)); root.add(g)
+            }
 
-            // ---- place (x, z) ----
-            const bounce = (g, p, h, n) => g.position.y += Math.abs(Math.sin(p * Math.PI * n)) * h;
-            R(cottage(), 'education', '🏡 Education', 4.8, -3.5, -3.5, Math.PI / 4, 1, { blob: 2.5, dot: 1, d: 1400, fx: (g, p) => { g.userData.parts.win.forEach(w => w.material.emissiveIntensity = .7 + 1.4 * bell(p)); g.scale.y *= 1 + .06 * Math.sin(p * Math.PI * 4) * (1 - p) } });
+            // ---- compose the scene ----
+            fence(-7.2, -1.2, 5); bush(-1.4, 5, 1);
+            for (let i = 0; i < 44; i++) {
+                const x = -9 + ((i * 53) % 100) / 100 * 18, z = 1 + ((i * 37) % 100) / 100 * 9; if (Math.abs(x - 3) < 1.5 && z > 0 && z < 9 && Math.abs(x - (.4 + z * .25)) < 1.4) continue;
+                const m = new T.Group(); m.add(cyl(.02, .02, .4, 0x6fae75, 0, .2, 0, 5), ell(.16, 0xfff8e8, 0, .42, 0, 1, .35, 1), ell(.07, 0xf7dc86, 0, .46, 0)); m.position.set(x, 0, z); m.traverse(a => a.castShadow = false); root.add(m)
+            }
+            [[3.4, -3.4, 1.4], [2.2, -.6, 1.1], [9.6, -1, 1.3], [-1.2, -3, 1.3], [-5.4, -1.6, 1.3], [8, -5, 1.4], [11, 1, 1.2], [-12, 2, 1.4]].forEach(b => bush(b[0], b[1], b[2]));
+            const bounce = (g, p, h, n) => g.position.y += Math.abs(Math.sin(p * Math.PI * n)) * h, wob = (g, p) => g.rotation.z = Math.sin(p * 18) * .05 * (1 - p);
+            R(bigTree(), 'values', '🌳 Values', 9, 0, 0, 0, 1, { d: 1200, fx: (g, p) => { g.userData.parts.f.scale.setScalar(1 + .04 * bell(p)); g.userData.parts.f.rotation.z = Math.sin(p * 14) * .02 * (1 - p) } });
+            R(lantern(), 'values', '🏮 Values', .6, -4.5, 3, 0, 1, { y: 4.7, d: 1000, fx: (g, p) => { g.rotation.z = Math.sin(p * 14) * .2 * (1 - p); g.userData.parts.l.intensity = .8 + 2 * bell(p) } });
+            cyl(.16, .2, 4.6, 0x9a6a47, 0, 0, 0); const post = cyl(.16, .2, 4.6, 0x9a6a47, -7.1, 2.3, 1.5); root.add(post);
+            [['About Me', '🐰', '#c28a52', 'about', 3.7], ['Projects', '🌱', '#b98048', 'projects', 2.8], ['Contact', '✉️', '#c28a52', 'contact', 1.9]].forEach((b, i) =>
+                R(board(b[0], b[1], b[2]), b[3], b[1] + ' ' + b[0], .8, -5.5, 1.6, .22 - i * .04, 1, { y: b[4], d: 1100, fx: wob }));
+            R(rabbit(), 'about', '🐰 About Me', 3, -2.9, 3.7, .2, 1.9, { blob: 1, dot: 1, main: 1, d: 1300, fx: (g, p) => { bounce(g, p, .9, 3); g.userData.parts.head.rotation.x = -.25 * bell(p) } });
+            R(cottage(), 'education', '🏡 Education', 7, 6.2, -2, -.35, .95, { blob: 3, dot: 1, d: 1400, fx: (g, p) => { g.userData.parts.win.forEach(w => w.material.emissiveIntensity = .7 + 1.4 * bell(p)); g.scale.y *= 1 + .04 * Math.sin(p * Math.PI * 4) * (1 - p) } });
             const mfx = (g, p) => { const u = g.userData; u.parts.cap.position.y = 1.4 + .8 * Math.min(1, bell(p) * 1.7); u.parts.win.forEach(w => w.material.emissiveIntensity = .6 + 1.2 * bell(p)); g.scale.multiplyScalar(1 + .12 * bell(p)) };
-            R(mush(1, 0xe97b7b), 'projects', '🍄 Projects', 3.3, 3.8, -3.5, .6, 1.2, { blob: 1.9, dot: 1, main: 1, d: 1500, fx: mfx });
-            R(mush(0, 0xf5b5c5), 'projects', '🍄 Projects', 2.5, 5.8, -1.4, 0, .7, { blob: 1.1, d: 1500, fx: mfx }); R(mush(0, 0xf7dc86), 'projects', '🍄 Projects', 2.5, 1.6, -5.4, 0, .6, { blob: 1, d: 1500, fx: mfx }); R(mush(0, 0xc9b6ee), 'projects', '🍄 Projects', 2.5, -1.2, 5.6, 0, .5, { blob: .9, d: 1500, fx: mfx });
-            [[-7, -2.5, 1.1], [-5.3, -6.4, .9], [7, -5.4, 1.1], [-7.2, 4.2, .8]].forEach((t, i) => R(tree(), 'values', '🌳 Values', 4.2, t[0], t[1], i, t[2], { blob: 1.4, dot: !i, d: 1200, fx: (g, p) => { g.rotation.z = Math.sin(p * 14) * .05 * (1 - p); g.userData.parts.f.scale.setScalar(1 + .12 * bell(p)) } }));
-            R(rabbit(), 'about', '🐰 About Me', 2.3, .8, 3.2, .6, 1.2, { blob: .9, dot: 1, d: 1300, fx: (g, p) => { bounce(g, p, 1.1, 3); g.userData.parts.head.rotation.x = -.3 * bell(p) } });
-            R(cat(), 'hobbies', '🐱 Hobbies', 2.2, -3.2, 1.3, .8, 1.1, { blob: .9, dot: 1, d: 1400, fx: (g, p) => { g.userData.parts.tail.rotation.y = Math.sin(p * 18) * .7 * (1 - p * .4); bounce(g, p, .5, 2) } });
-            R(hog(), 'kudos', '🦔 Kind Words', 1.8, 7, .8, -.8, 1.1, { blob: 1, dot: 1, d: 1200, fx: (g, p) => { g.rotation.y = g.userData.r0 + p * Math.PI * 4; bounce(g, p, .6, 2) } });
-            R(mailbox(), 'contact', '💌 Contact', 2.9, -6.3, 1.6, .8, 1.1, {
-                blob: .7, dot: 1, d: 2500, delay: 500, fx: (g, p) => {
+            R(mush(1, 0xe97b7b), 'projects', '🍄 Projects', 3.3, 5.6, 6.4, -.4, .8, { blob: 1.3, dot: 1, main: 1, d: 1500, fx: mfx });
+            R(mush(0, 0xf5b5c5), 'projects', '🍄 Projects', 2.5, 4.2, 7.4, 0, .45, { blob: .7, d: 1500, fx: mfx }); R(mush(0, 0xf7dc86), 'projects', '🍄 Projects', 2.5, -8.4, -1.2, 0, .9, { blob: 1, d: 1500, fx: mfx });
+            R(mailbox(), 'contact', '💌 Contact', 3, 4.4, 4.3, -.45, 1.15, {
+                blob: .8, dot: 1, main: 1, d: 2500, fx: (g, p) => {
                     const P = g.userData.parts, o = Math.min(1, p / .15) * (p > .85 ? 1 - (p - .85) / .15 : 1); P.door.rotation.x = 1.5 * o; P.flag.rotation.z = -1.5 * (1 - o);
-                    const q = clamp((p - .15) / .75, 0, 1); P.env.visible = p > .15 && p < .95; P.env.position.set(0, .2 + q * 2.2, .3 + q * .8); P.env.rotation.y = q * 6.28; P.env.material && 0; P.env.scale.setScalar(1 + q * .4)
+                    const q = clamp((p - .15) / .75, 0, 1); P.env.visible = p > .15 && p < .95; P.env.position.set(0, .2 + q * 2.2, .3 + q * .8); P.env.rotation.y = q * 6.28; P.env.scale.setScalar(1 + q * .4)
                 }
             });
-            R(sign(), 'experience', '🪧 Experience', 2.8, 1.2, -1.2, -.4, 1, { blob: .6, dot: 1, main: 1, d: 1300, fx: (g, p) => { g.rotation.z = Math.sin(p * 20) * .05 * (1 - p) } });
-            R(flowers(), 'skills', '🌸 Skills', 1.8, -1.5, 5.9, 0, 1.2, { blob: 1.6, dot: 1, main: 1, d: 1800, fx: (g, p) => g.userData.parts.heads.forEach((h, i) => h.scale.setScalar(.15 + .85 * back(clamp((p * 1.5 - i * .07) / .6, 0, 1)))) });
-            R(pond(), 'blog', '🪷 Writing', .6, 5, 4.6, 0, 1, { dot: 1, d: 1700, fx: (g, p) => { const P = g.userData.parts; P.ring.scale.setScalar(1 + p * 1.2); P.ring.material.opacity = .8 * (1 - p) * (p > 0); P.pads.forEach((l, i) => l.rotation.y = Math.sin(p * 9 + i) * .4 * (1 - p)) } });
-            R(books(), 'education', '📚 Education', 1, -5.7, -.3, .4, 1, { blob: .6, d: 1000, fx: (g, p) => { bounce(g, p, .5, 1); g.rotation.y = g.userData.r0 + p * 6.28 } });
-            R(lantern(), 'hobbies', '🏮 Hobbies', 2, -1.4, -3.1, 0, 1, { blob: .4, d: 1000, fx: (g, p) => g.userData.parts.l.intensity = .7 + 2 * bell(p) });
-            R(can(), 'skills', '🚿 Skills', .9, .2, 6.4, .8, 1, { blob: .5, d: 1000, fx: (g, p) => g.rotation.z = -.6 * bell(p) });
-            [[-7.6, -.6, 1], [-.6, -5.2, 1.1], [8, 2.5, .9], [2.6, -7.2, 1], [-3.8, 6.6, .9], [6.2, 6.2, .9]].forEach(b => bush(b[0], b[1], b[2]));
-            const bd = bird(); R(bd, 'experience', '🐦 Experience', 1.1, -7, -2.5, 0, 1.4, { fly: 1, d: 900, fx: (g, p) => bounce(g, p, .0, 1) });
-            const BH = new T.Vector3(-7, 4.5, -2.5), BS = new T.Vector3(1.2, 2.75, -1.2); bd.position.copy(BH); let bf = null;
-            flyBird = to => { const b = (to === false ? BH : BS); bf = { t0: performance.now(), a: bd.position.clone(), b: b.clone() } };
-            const fl = []; function addFly(n, col, bee, id, lab) {
+            R(hydra(), 'skills', '🌸 Skills', 1.8, -1, 7.6, 0, 1.1, { blob: 1.8, dot: 1, main: 1, d: 1800, fx: (g, p) => g.userData.parts.heads.forEach((h, i) => h.scale.setScalar(.15 + .85 * back(clamp((p * 1.5 - i * .12) / .6, 0, 1)))) });
+            R(basket(), 'skills', '🧺 Skills', 1.2, 2.6, 6.1, .4, 1.1, { blob: .8, d: 1000, fx: (g, p) => { bounce(g, p, .4, 1); g.rotation.y = g.userData.r0 + p * 6.28 } });
+            R(cat(), 'hobbies', '🐱 Hobbies', 2.3, 2.1, 2.6, -.3, 1.1, { blob: .9, dot: 1, d: 1400, fx: (g, p) => { g.userData.parts.tail.rotation.y = Math.sin(p * 18) * .7 * (1 - p * .4); bounce(g, p, .5, 2) } });
+            R(hog(), 'kudos', '🦔 Kind Words', 1.8, 7.8, 1.9, -.6, 1.1, { blob: 1, dot: 1, d: 1200, fx: (g, p) => { g.rotation.y = g.userData.r0 + p * Math.PI * 4; bounce(g, p, .6, 2) } });
+            R(pond(), 'blog', '🪷 Writing', .6, -2.6, -4, 0, 1.3, { dot: 1, d: 1700, fx: (g, p) => { const P = g.userData.parts; P.ring.scale.setScalar(1 + p * 1.2); P.ring.material.opacity = .8 * (1 - p) * (p > 0); P.pads.forEach((l, i) => l.rotation.y = Math.sin(p * 9 + i) * .4 * (1 - p)) } });
+            const wx = -3, wz = -21, wm = R(windmill(), 'experience', '🌬️ Experience', 9, wx, wz, .2, 1.5, { y: H(wx, wz) - .1, dot: 1, main: 1, d: 1500, fx: (g, p) => g.userData.parts.blades.rotation.z += bell(p) * 5 });
+            const bd = bird(); R(bd, 'experience', '🐦 Experience', 1.1, -1.2, 5, .4, 1.4, { fly: 1, d: 900, fx: () => { } });
+            const BH = new T.Vector3(-1.2, 1.95, 5), BS = new T.Vector3(wx, H(wx, wz) + 8.7, wz); bd.position.copy(BH); let bf = null;
+            flyBird = to => { bf = { t0: performance.now(), a: bd.position.clone(), b: (to === false ? BH : BS).clone() } };
+            function addFly(n, col, bee, id, lab) {
                 for (let i = 0; i < n; i++) {
-                    const g = flyer(col[i % col.length], bee); R(g, id, lab, .6, 0, 0, 0, 1.2, { fly: 1, d: 700, fx: () => { } });
-                    g.userData.f = { cx: Math.sin(i * 2.1) * 5, cz: Math.cos(i * 2.1) * 5 + 1, r: 1.2 + i * .5, sp: .5 + i * .12, h: 2 + i * .4, ph: i * 2 }
+                    const g = flyer(col[i % col.length], bee); R(g, id, lab, .6, 0, 0, 0, 1.3, { fly: 1, d: 700, fx: () => { } });
+                    g.userData.f = { cx: Math.sin(i * 2.1) * 4, cz: Math.cos(i * 2.1) * 2.5 + 2.5, r: 1.2 + i * .5, sp: .5 + i * .12, h: 2.2 + i * .45, ph: i * 2 }
                 }
             }
             addFly(3, [0xf5b5c5, 0xc9b6ee, 0xf7dc86], 0, 'values', '🦋 Values'); addFly(3, [0], 1, 'skills', '🐝 Skills');
 
             // ---- interaction ----
-            const ray = new T.Raycaster(), mv = new T.Vector2(), v3 = new T.Vector3(); let W = 1, H = 1, tx = 0, ty = 0, px = 0, py = 0, shift = 0;
-            scr = g => { g.getWorldPosition(v3); v3.y += g.userData.top; v3.project(cam); return { x: (v3.x + 1) / 2 * W, y: (1 - v3.y) / 2 * H } };
+            const ray = new T.Raycaster(), mv = new T.Vector2(), v3 = new T.Vector3(); let W = 1, H_ = 1, tx = 0, ty = 0, px = 0, py = 0, shift = 0;
+            scr = g => { g.getWorldPosition(v3); v3.y += g.userData.top; v3.project(cam); return { x: (v3.x + 1) / 2 * W, y: (1 - v3.y) / 2 * H_ } };
             const cv = renderer.domElement;
             function pick(e) {
-                mv.set(e.clientX / W * 2 - 1, -e.clientY / H * 2 + 1); ray.setFromCamera(mv, cam);
+                mv.set(e.clientX / W * 2 - 1, -e.clientY / H_ * 2 + 1); ray.setFromCamera(mv, cam);
                 for (const i of ray.intersectObjects(hot, true)) { let o = i.object; while (o && !o.userData.id) o = o.parent; if (o) return o } return null
             }
             activate = g => { const u = g.userData; u.anim = { t0: performance.now(), d: u.d || 1300 }; if (u.id === 'experience') flyBird(true); setTimeout(() => openSec(u.id, g), u.delay || 500) };
-            cv.addEventListener('pointermove', e => { if (!calm) { tx = e.clientX / W * 2 - 1; ty = e.clientY / H * 2 - 1 } if (e.pointerType === 'mouse') { hov = pick(e); cv.style.cursor = hov ? 'pointer' : 'default' } });
+            cv.addEventListener('pointermove', e => { if (!calm) { tx = e.clientX / W * 2 - 1; ty = e.clientY / H_ * 2 - 1 } if (e.pointerType === 'mouse') { hov = pick(e); cv.style.cursor = hov ? 'pointer' : 'default' } });
             cv.addEventListener('click', e => { const g = pick(e); if (g) { hov = g; activate(g); if (touchOnly) setTimeout(() => hov = null, 1500) } });
             function glow(g, on) {
                 if (g.userData.gl === on) return; g.userData.gl = on; g.traverse(m => {
                     if (!m.isMesh || m.userData.hit || !m.material.emissive) return; const u = m.userData;
                     if (u.e0 === undefined) { u.e0 = m.material.emissive.getHex(); u.i0 = m.material.emissiveIntensity } if (u.e0) return;
-                    if (on) { m.material.emissive.setHex(0xffe3a0); m.material.emissiveIntensity = .35 } else { m.material.emissive.setHex(0); m.material.emissiveIntensity = u.i0 }
+                    if (on) { m.material.emissive.setHex(0xffe3a0); m.material.emissiveIntensity = .3 } else { m.material.emissive.setHex(0); m.material.emissiveIntensity = u.i0 }
                 })
             }
-            function resize() { W = innerWidth; H = innerHeight; renderer.setSize(W, H); cam.aspect = W / H }
+            function resize() { W = innerWidth; H_ = innerHeight; renderer.setSize(W, H_); cam.aspect = W / H_ }
             addEventListener('resize', resize); resize();
 
-            const clock = new T.Clock(); let t = 0, slow = 0, fr = 0, downgraded = false;
+            const clock = new T.Clock(); let t = 0, fr = 0, downgraded = false;
             function frame() {
                 requestAnimationFrame(frame); const dt = Math.min(clock.getDelta(), .05); t += dt; const now = performance.now();
                 if (!downgraded && t > 2 && t < 5) { fr++; if (t > 4.5 && fr / (t - 2) < 28) { downgraded = true; renderer.setPixelRatio(1); resize(); sun.castShadow = false; scene.traverse(o => o.material && (o.material.needsUpdate = true)) } }
-                shift += (want - shift) * Math.min(1, dt * 4); const ie = back(clamp(t / 1.8, 0, 1)); root.scale.setScalar(.4 + .6 * ie);
-                px += (tx - px) * dt * 3; py += (ty - py) * dt * 3; const asp = W / H, fov = asp < .9 ? 44 : 32; cam.fov = fov;
-                const D = Math.max(30, 11.5 / (Math.tan(fov * Math.PI / 360) * asp)) * (1 + (1 - ie) * .5), az = Math.PI / 4 + px * .2, el = .62 + py * .05;
-                cam.position.set(D * Math.cos(el) * Math.sin(az), D * Math.sin(el), D * Math.cos(el) * Math.cos(az)); cam.lookAt(0, .6, 0); cam.aspect = asp;
-                const mob = W < 700; cam.setViewOffset(W, H, mob ? 0 : shift * W * .17, mob ? shift * H * .16 : 0, W, H);
-                clouds.forEach((c, i) => { c.position.x += dt * .35; if (c.position.x > 26) c.position.x = -26 });
+                shift += (want - shift) * Math.min(1, dt * 4); const ie = back(clamp(t / 2, 0, 1));
+                px += (tx - px) * dt * 3; py += (ty - py) * dt * 3; const asp = W / H_; cam.fov = asp < .9 ? 46 : 34;
+                const D = 17 * Math.max(1, Math.pow(1.5 / asp, .7)) * (1 + (1 - ie) * .3);
+                cam.position.set(px * 1.6, 3.4 - py * .35 + (D - 17) * .18, D); cam.lookAt(px * .5, 2.3, 0); cam.aspect = asp;
+                const mob = W < 700; cam.setViewOffset(W, H_, mob ? 0 : shift * W * .17, mob ? shift * H_ * .16 : 0, W, H_);
+                clouds.forEach(c => { c.position.x += dt * .5; if (c.position.x > 60) c.position.x = -60 });
                 hot.forEach((g, i) => {
                     const u = g.userData, on = g === hov; u.k += ((on ? 1 : 0) - u.k) * Math.min(1, dt * 10); glow(g, on);
-                    g.scale.setScalar(u.s0 * (1 + u.k * .1 + (on ? Math.sin(t * 9) * .025 : 0))); if (!u.fly) g.position.y = u.k * .12 * (.5 + .5 * Math.sin(t * 8));
+                    g.scale.setScalar(u.s0 * (1 + u.k * .08 + (on ? Math.sin(t * 9) * .02 : 0))); if (!u.fly) g.position.y = u.y0 + u.k * .12 * (.5 + .5 * Math.sin(t * 8));
                     if (u.f) { const f = u.f, a = t * f.sp + f.ph; g.position.set(f.cx + Math.cos(a) * f.r, f.h + Math.sin(a * 2) * .4, f.cz + Math.sin(a) * f.r); g.rotation.y = -a; const w = Math.sin(t * (u.parts.lw ? 28 : 34) + i) * .8; u.parts.lw.rotation.z = w; u.parts.rw.rotation.z = -w }
-                    if (u.parts.heads && !u.anim) u.parts.heads.forEach((h, j) => h.rotation.z = Math.sin(t * 1.5 + j) * .1);
-                    if (u.parts.f && !u.anim) u.parts.f.rotation.z = Math.sin(t * .9 + i) * .02;
+                    if (u.parts.blades) u.parts.blades.rotation.z = t * .4;
+                    if (u.parts.heads && !u.anim) u.parts.heads.forEach((h, j) => h.rotation.z = Math.sin(t * 1.5 + j) * .08);
                     if (u.anim) { const p = (now - u.anim.t0) / u.anim.d; if (u.fx) u.fx(g, Math.min(p, 1)); if (p >= 1) { u.anim = null; g.rotation.y = u.r0; g.rotation.z = 0 } }
                 });
                 if (bf) {
-                    const p = clamp((now - bf.t0) / 1700, 0, 1), e = p * p * (3 - 2 * p), P = bd.userData.parts; bd.position.lerpVectors(bf.a, bf.b, e); bd.position.y += Math.sin(p * Math.PI) * 2.2;
+                    const p = clamp((now - bf.t0) / 2200, 0, 1), e = p * p * (3 - 2 * p), P = bd.userData.parts; bd.position.lerpVectors(bf.a, bf.b, e); bd.position.y += Math.sin(p * Math.PI) * 3;
                     bd.rotation.y = Math.atan2(bf.b.x - bf.a.x, bf.b.z - bf.a.z); const w = Math.sin(t * 32) * .9 * (p < 1); P.lw.rotation.z = w; P.rw.rotation.z = -w; if (p >= 1) bf = null
                 }
                 renderer.render(scene, cam);
-                const h = hov; if (h && !panel.classList.contains('on') || h) { const p = scr(h); tip.textContent = h.userData.lab; tip.style.transform = `translate(${p.x}px,${p.y - 12}px) translate(-50%,-100%)`; tip.style.opacity = 1 } else tip.style.opacity = 0;
+                if (hov) { const p = scr(hov); tip.textContent = hov.userData.lab; tip.style.transform = `translate(${p.x}px,${p.y - 12}px) translate(-50%,-100%)`; tip.style.opacity = 1 } else tip.style.opacity = 0;
                 hot.forEach(g => { const d = g.userData.dotEl; if (!d) return; const p = scr(g); d.style.transform = `translate(${p.x}px,${p.y}px)`; d.style.opacity = (g === hov || ie < 1) ? 0 : 1 })
             }
             frame();
