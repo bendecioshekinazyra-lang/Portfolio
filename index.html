@@ -526,7 +526,7 @@
         face.position.set(w / 2, 0, .152); face.castShadow = false; cover.add(face);
         const innerFace = new T.Mesh(new T.PlaneGeometry(w - .12, h - .12), new T.MeshStandardMaterial({ color: 0xf2e8d6, roughness: .95 }));
         innerFace.position.set(w / 2, 0, .088); innerFace.rotation.y = Math.PI; innerFace.castShadow = false; cover.add(innerFace); body.add(cover);
-        hit(g, 1.3, 0); g.userData.bookCenterX = w / 2; g.userData.spreads = spreads; g.userData.parts = { cover, pages, showSpread }; return g
+        hit(g, .78, 0); g.userData.bookCenterX = w / 2; g.userData.spreads = spreads; g.userData.parts = { cover, pages, showSpread }; return g
       }
       function bigTree() {
         const g = new T.Group(), f = new T.Group(), br = 0x8a5a3a; g.add(cyl(1, 1.5, 9, br, -8.5, 4.5, -1, 14));
@@ -703,9 +703,9 @@
           })
         }
       };
-      R(bigTree(), 'values', '🌳 Values', 9, 0, 0, 0, 1, { zoom: 26, d: 1200, fx: (g, p) => { g.userData.parts.f.scale.setScalar(1 + .04 * bell(p)); g.userData.parts.f.rotation.z = Math.sin(p * 14) * .02 * (1 - p) } });
-      R(lantern(), 'values', '🏮 Values', .6, -4.5, 3, 0, 1, { y: 4.7, d: 1000, fx: (g, p) => { g.rotation.z = Math.sin(p * 14) * .2 * (1 - p); g.userData.parts.l.intensity = .8 + 2 * bell(p) } });
-      R(rabbit(), 'about', '🐰 About Me', 3, -2.9, 3.7, .2, 1.9, { blob: 1, zoom: 5.2, dot: 1, main: 1, d: 1300, fx: (g, p) => { bounce(g, p, .9, 3); g.userData.parts.head.rotation.x = -.25 * bell(p) } });
+      R(bigTree(), 'values', '🌳 Values', 9, 0, 0, 0, 1, { zoom: 26, d: 1200, fx: (g, p) => { g.userData.parts.f.scale.setScalar(1 + .015 * bell(p)); g.userData.parts.f.rotation.z = Math.sin(p * 8) * .006 * (1 - p) } });
+      R(lantern(), 'values', '🏮 Values', .6, -4.5, 3, 0, 1, { y: 4.7, d: 1000, fx: (g, p) => { g.rotation.z = Math.sin(p * 8) * .06 * (1 - p); g.userData.parts.l.intensity = .8 + 2 * bell(p) } });
+      R(rabbit(), 'about', '🐰 About Me', 3, -2.9, 3.7, .2, 1.9, { blob: 1, zoom: 5.2, dot: 1, main: 1, d: 1300, fx: (g, p) => { bounce(g, p, .22, 2); g.userData.parts.head.rotation.x = -.07 * bell(p) } });
       const houseG = R(cottage(), 'house', '🏡 Projects & Experience', 7, 6.2, -2, -.35, .95, { blob: 3, dot: 1, main: 1, d: 1400, fx: (g, p) => { g.userData.parts.win.forEach(w => w.material.emissiveIntensity = .7 + 1.4 * bell(p)) } });
       {
         const rug = cyl(1.7, 1.7, .04, 0xe8a5a8, 0, .5, .5, 32); rug.scale.z = .7;
@@ -717,22 +717,22 @@
         houseG.add(box(.12, 1.6, 1.7, 0x8a5a3a, -2.7, 1.6, -.4));[1, 1.6, 2.2].forEach((y, r) => { houseG.add(box(.4, .06, 1.7, 0x9a6a47, -2.55, y, -.4)); for (let i = 0; i < 6; i++) { const h = .4 + ((i * 5 + r) % 3) * .1; houseG.add(box(.2, h, .16, [0xe58f9c, 0x8fbf8f, 0xf7dc86, 0x9bb7e6, 0xc9b3ee][(i + r) % 5], -2.55, y + .03 + h / 2, -1.05 + i * .27)) } });
         houseG.add(box(.1, 1.3, 1.5, 0x8a5a3a, 2.7, 2, -.4), mk(new T.BoxGeometry(.06, 1.1, 1.3), 0xbfe6ee, 2.65, 2, -.4, { emissive: 0xbfe6ee, emissiveIntensity: .8 }), box(.08, .06, 1.3, 0x8a5a3a, 2.63, 2, -.4), box(.08, 1.1, .06, 0x8a5a3a, 2.63, 2, -.4), box(.1, 1.5, .35, 0xf5b5c5, 2.62, 2, -1.2), box(.1, 1.5, .35, 0xf5b5c5, 2.62, 2, .4));
         houseG.add(cyl(.1, .09, .18, 0xfff3da, -.95, 1.29, -1.3, 12), cyl(.09, .12, .3, 0xe58f9c, .95, 1.35, -1.3, 10), ell(.12, 0xf7dc86, .95, 1.6, -1.3));
-        [['p1', 'Moss & Co.', 'Plant-shop storefront', '🌱', '#a9d4a0', -1.9], ['p2', 'Pocket Atlas', 'Offline travel journal', '🧭', '#f0b0b5', 0], ['p3', 'Tea Timer', 'A tiny, cozy PWA', '🍵', '#f5d27a', 1.9]]
-          .forEach(f => R(book(f[1], f[2], f[3], f[4], 1.05, 1.35, SEC[f[0]][2], 'PROJECT'), f[0], f[3] + ' ' + f[1], 1, f[5], -1.82, 0, 1, { par: houseG, y: 2.3, inner: 1, zoom: 1.7, d: 1200, fx: bookMagic }));
-        [['x1', 'Acorn Studio', 'Senior Front-end', '📘', '#a9c4f0', -1.9], ['x2', 'Maple Labs', 'Product Designer', '📙', '#f5c99a', 0], ['x3', 'Clover Co.', 'Junior Developer', '📗', '#b5dcc0', 1.9]]
-          .forEach(f => R(book(f[1], f[2], f[3], f[4], 1.05, 1.35, SEC[f[0]][2], 'EXPERIENCE'), f[0], f[3] + ' ' + f[1], 1, f[5], -1.35, 0, 1, { par: houseG, y: 1.9, inner: 1, zoom: 1.7, d: 1200, fx: bookMagic }))
+        [['p1', 'Moss & Co.', 'Plant-shop storefront', '🌱', '#a9d4a0', -2.1], ['p2', 'Pocket Atlas', 'Offline travel journal', '🧭', '#f0b0b5', -1.26], ['p3', 'Tea Timer', 'A tiny, cozy PWA', '🍵', '#f5d27a', -.42]]
+          .forEach(f => R(book(f[1], f[2], f[3], f[4], 1.05, 1.35, SEC[f[0]][2], 'PROJECT'), f[0], f[3] + ' ' + f[1], 1, f[5], -1.35, 0, .68, { par: houseG, y: 1.66, inner: 1, zoom: 1.2, d: 1200, fx: bookMagic }));
+        [['x1', 'Acorn Studio', 'Senior Front-end', '📘', '#a9c4f0', .42], ['x2', 'Maple Labs', 'Product Designer', '📙', '#f5c99a', 1.26], ['x3', 'Clover Co.', 'Junior Developer', '📗', '#b5dcc0', 2.1]]
+          .forEach(f => R(book(f[1], f[2], f[3], f[4], 1.05, 1.35, SEC[f[0]][2], 'EXPERIENCE'), f[0], f[3] + ' ' + f[1], 1, f[5], -1.35, 0, .68, { par: houseG, y: 1.66, inner: 1, zoom: 1.2, d: 1200, fx: bookMagic }))
       }
-      const mfx = (g, p) => { const u = g.userData; u.parts.cap.position.y = 1.4 + .8 * Math.min(1, bell(p) * 1.7); u.parts.win.forEach(w => w.material.emissiveIntensity = .6 + 1.2 * bell(p)); g.scale.multiplyScalar(1 + .12 * bell(p)) };
+      const mfx = (g, p) => { const u = g.userData; u.parts.cap.position.y = 1.4 + .22 * Math.min(1, bell(p) * 1.7); u.parts.win.forEach(w => w.material.emissiveIntensity = .6 + 1.2 * bell(p)); g.scale.setScalar(u.s0 * (1 + .03 * bell(p))) };
       R(mush(1, 0xe97b7b), 'hobbies', '🍄 Hobbies', 3.3, 5.6, 6.4, -.4, .8, { blob: 1.3, dot: 1, main: 1, d: 1500, fx: mfx });
       R(mailbox(), 'contact', '💌 Contact', 3, .7, 4.3, -.1, 1.15, {
         blob: .8, dot: 1, main: 1, d: 2500, fx: (g, p) => {
-          const P = g.userData.parts, o = Math.min(1, p / .15) * (p > .85 ? 1 - (p - .85) / .15 : 1); P.door.rotation.x = 1.5 * o; P.flag.rotation.z = -1.5 * (1 - o);
-          const q = clamp((p - .15) / .75, 0, 1); P.env.visible = p > .15 && p < .95; P.env.position.set(0, .2 + q * 2.2, .3 + q * .8); P.env.rotation.y = q * 6.28; P.env.scale.setScalar(1 + q * .4)
+          const P = g.userData.parts, o = Math.min(1, p / .15) * (p > .85 ? 1 - (p - .85) / .15 : 1); P.door.rotation.x = 1.1 * o; P.flag.rotation.z = -1.1 * (1 - o);
+          const q = clamp((p - .15) / .75, 0, 1); P.env.visible = p > .15 && p < .95; P.env.position.set(0, .2 + q * 1.4, .3 + q * .5); P.env.rotation.y = q * 2.8; P.env.scale.setScalar(1 + q * .12)
         }
       });
-      R(hydra(), 'skills', '🌷 Skills', 1.35, -1, 7.6, 0, 1.1, { blob: 1.8, dot: 1, main: 1, zoom: 4.2, d: 1800, fx: (g, p) => g.userData.parts.heads.forEach((h, i) => h.scale.setScalar(.15 + .85 * back(clamp((p * 1.5 - i * .12) / .6, 0, 1)))) });
-      R(pond(), 'blog', '🪷 Writing', .6, -2.6, -4, 0, 1.3, { dot: 1, d: 1700, fx: (g, p) => { const P = g.userData.parts; P.ring.scale.setScalar(1 + p * 1.2); P.ring.material.opacity = .8 * (1 - p) * (p > 0); P.pads.forEach((l, i) => l.rotation.y = Math.sin(p * 9 + i) * .4 * (1 - p)) } });
-      const wx = -3, wz = -21, wm = R(windmill(), 'education', '🌬️ Education', 9, wx, wz, .2, 1.5, { y: H(wx, wz) - .1, dot: 1, main: 1, d: 1500, fx: (g, p) => g.userData.parts.blades.rotation.z += bell(p) * 5 });
+      R(hydra(), 'skills', '🌷 Skills', 1.35, -1, 7.6, 0, 1.1, { blob: 1.8, dot: 1, main: 1, zoom: 4.2, d: 1800, fx: (g, p) => g.userData.parts.heads.forEach((h, i) => { const q = clamp((p * 1.5 - i * .12) / .6, 0, 1); h.scale.setScalar(.15 + .85 * q * q * (3 - 2 * q)) }) });
+      R(pond(), 'blog', '🪷 Writing', .6, -2.6, -4, 0, 1.3, { dot: 1, d: 1700, fx: (g, p) => { const P = g.userData.parts; P.ring.scale.setScalar(1 + p * .35); P.ring.material.opacity = .8 * (1 - p) * (p > 0); P.pads.forEach((l, i) => l.rotation.y = Math.sin(p * 6 + i) * .1 * (1 - p)) } });
+      const wx = -3, wz = -21; R(windmill(), 'education', '🌬️ Education', 9, wx, wz, .2, 1.5, { y: H(wx, wz) - .1, dot: 1, main: 1, d: 1500 });
       function addFly(n, col, bee, id, lab) {
         for (let i = 0; i < n; i++) {
           const g = flyer(col[i % col.length], bee); R(g, id, lab, .6, 0, 0, 0, 1.3, { fly: 1, d: 700, fx: () => { } });
@@ -857,11 +857,10 @@
         clouds.forEach(c => { c.position.x += dt * .5; if (c.position.x > 60) c.position.x = -60 });
         hot.forEach((g, i) => {
           const u = g.userData, isBook = !!u.parts.cover, settledBook = isBook && (u.bookOpening || u.bookOpen || u.bookClosing), on = g === hov && !settledBook;
-          const hoverScale = isBook ? .025 : .08, hoverPulse = isBook ? .004 : .02, hoverLift = isBook ? .03 : .12, hoverSpeed = isBook ? 4 : 8;
           u.k += ((on ? 1 : 0) - u.k) * Math.min(1, dt * 10); glow(g, on);
           if (settledBook) g.scale.setScalar(u.s0);
-          else g.scale.setScalar(u.s0 * (1 + u.k * hoverScale + (on ? Math.sin(t * (isBook ? 4 : 9)) * hoverPulse : 0)));
-          if (!u.fly && !settledBook) g.position.y = u.y0 + u.k * hoverLift * (.5 + .5 * Math.sin(t * hoverSpeed));
+          else g.scale.setScalar(u.s0 * (1 + u.k * .025 + (on ? Math.sin(t * 4) * .004 : 0)));
+          if (!u.fly && !settledBook) g.position.y = u.y0 + u.k * .03 * (.5 + .5 * Math.sin(t * 4));
           if (u.f) { const f = u.f, a = t * f.sp + f.ph;
             if (f.wander) g.position.set(f.cx + Math.cos(a) * f.rx + Math.sin(a * 2.3) * 2.5, f.h + Math.sin(a * 3) * 1.1, f.cz + Math.sin(a * 1.2) * f.rz);
             else g.position.set(f.cx + Math.cos(a) * f.r, f.h + Math.sin(a * 2) * .4, f.cz + Math.sin(a) * f.r);
@@ -870,7 +869,7 @@
             else { u.parts.lw.rotation.z = w; u.parts.rw.rotation.z = -w }
           }
           if (u.parts.blades) u.parts.blades.rotation.z = t * .4;
-          if (u.parts.heads && !u.anim) u.parts.heads.forEach((h, j) => h.rotation.z = Math.sin(t * 1.5 + j) * .08);
+          if (u.parts.heads && !u.anim) u.parts.heads.forEach((h, j) => h.rotation.z = Math.sin(t + j) * .025);
           if (u.pageTurn) {
             const turn = u.pageTurn, p = clamp((now - turn.t0) / turn.d, 0, 1), progress = sm(p);
             u.parts.pages[turn.index].rotation.y = turn.from + (turn.to - turn.from) * progress;
