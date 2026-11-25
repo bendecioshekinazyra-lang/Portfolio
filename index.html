@@ -5,8 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Willow Hollow – a tiny 3D portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Caveat+Brush&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --paper: #fff6e3;
@@ -310,7 +309,6 @@
   <div id="back"><button id="bk">← Back to the garden</button><span>Click a frame for projects · a card for
       experience</span></div>
   <div id="tip"></div>
-  <nav id="chips" aria-label="Sections"></nav>
   <aside id="panel" role="dialog" aria-labelledby="pt"><button id="x" aria-label="Close">×</button>
     <div id="pe"></div>
     <h2 id="pt"></h2>
@@ -343,7 +341,7 @@
       const T = THREE, $ = s => document.querySelector(s), clamp = (v, a, b) => Math.min(b, Math.max(a, v));
       const bell = p => Math.sin(clamp(p, 0, 1) * Math.PI), back = k => { k -= 1; return 1 + 2.70158 * k * k * k + 1.70158 * k * k };
       const panel = $('#panel'), tip = $('#tip'); let want = 0, cur = null, stage = 0, door = 0, ins = 0, fg = null, fz = 0, fdir = 0, ft = 0, scr = () => ({ x: innerWidth / 2, y: innerHeight / 2 }), activate = () => { }, byId = {}, hov = null;
-      const chips = $('#chips');
+      const chips = document.createElement('nav'); chips.id = 'chips';
       Object.keys(SEC).forEach(id => {
         if (SEC[id][3] || id === 'house') return; const b = document.createElement('button'); b.className = 'chip'; b.dataset.id = id; b.textContent = SEC[id][0] + ' ' + SEC[id][1];
         b.onclick = () => byId[id] ? activate(byId[id]) : openSec(id); b.onmouseenter = () => hov = byId[id] || null; b.onmouseleave = () => hov = null; chips.appendChild(b)
@@ -357,7 +355,7 @@
       $('#x').onclick = () => { closeSec(); unfocus() }; $('#bk').onclick = () => fg ? unfocus() : exitHouse(); addEventListener('keydown', e => { if (e.key === 'Escape') { if (fg) unfocus(); else if (panel.classList.contains('on')) closeSec(); else exitHouse() } });
 
       let renderer; try { renderer = new T.WebGLRenderer({ antialias: true, alpha: true }); } catch (e) { }
-      if (!renderer) { document.body.classList.add('nogl'); return }
+      if (!renderer) { document.body.classList.add('nogl'); document.body.appendChild(chips); return }
       const low = (navigator.hardwareConcurrency || 4) < 4 || matchMedia('(pointer:coarse)').matches, touchOnly = matchMedia('(hover:none)').matches, calm = matchMedia('(prefers-reduced-motion:reduce)').matches;
       renderer.setPixelRatio(Math.min(devicePixelRatio, low ? 1.5 : 2)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap;
       $('#stage').appendChild(renderer.domElement);
@@ -481,16 +479,18 @@
         for (let i = 0; i < 4; i++) { const a = new T.Group(); a.rotation.z = i * Math.PI / 2; a.add(box(.18, 3.8, .1, 0x8a5a3c, 0, 2.1, 0), box(.9, 2.2, .05, 0xe7b8a0, .5, 2.6, .06)); bl.add(a) }
         g.add(bl); g.userData.parts = { blades: bl }; hit(g, 2.2, 3); return g
       }
-      function signBoard() {
-        const g = new T.Group(), c = document.createElement('canvas'); c.width = 1024; c.height = 348; const x = c.getContext('2d'), tex = new T.CanvasTexture(c); tex.anisotropy = 8;
-        const draw = () => {
-          const gr = x.createLinearGradient(0, 0, 0, 348); gr.addColorStop(0, '#dcaa70'); gr.addColorStop(1, '#c28a52'); x.fillStyle = gr; x.fillRect(0, 0, 1024, 348); x.strokeStyle = 'rgba(90,55,30,.2)'; x.lineWidth = 3; for (let i = 0; i < 5; i++) { x.beginPath(); x.moveTo(0, 40 + i * 66); x.lineTo(1024, 48 + i * 66); x.stroke() }
-          x.strokeStyle = '#8a5a3a'; x.lineWidth = 16; x.strokeRect(8, 8, 1008, 332); x.font = "130px 'Caveat Brush',cursive"; x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round'; x.lineWidth = 16; x.strokeStyle = '#6b4429'; x.strokeText('Shekina’s Village', 512, 182); x.fillStyle = '#fff3da'; x.fillText('Shekina’s Village', 512, 182); tex.needsUpdate = true
-        };
-        draw(); document.fonts && document.fonts.load("130px 'Caveat Brush'").then(draw);
-        const mats = [0, 1, 2, 3, 4, 5].map(i => i === 4 ? new T.MeshStandardMaterial({ map: tex, roughness: .85 }) : M(0x8a5a3a)), b = new T.Mesh(new T.BoxGeometry(3, 1.02, .16), mats); b.position.y = 1.75; b.castShadow = true; g.add(b);
-        g.add(cyl(.09, .11, 2.1, 0x8a5a3a, -1.2, 1.05, -.02, 8), cyl(.09, .11, 2.1, 0x8a5a3a, 1.2, 1.05, -.02, 8), ell(.28, 0x7cb482, -1.35, .15, .2, 1, .7, 1), ell(.24, 0x8cc690, 1.35, .15, .2, 1, .7, 1), ell(.09, 0xf5b5c5, -1.3, .38, .3), ell(.09, 0xfff8e8, 1.4, .34, .3), ell(.09, 0xf7dc86, 1.15, .32, .35)); return g
+      const GLY = { S: [[[.9, 1.5], [.1, 1.5], [.1, .8], [.9, .8], [.9, .1], [.1, .1]]], H: [[[.1, .1], [.1, 1.5]], [[.9, .1], [.9, 1.5]], [[.1, .8], [.9, .8]]], E: [[[.9, 1.5], [.1, 1.5], [.1, .1], [.9, .1]], [[.1, .8], [.7, .8]]], K: [[[.1, .1], [.1, 1.5]], [[.9, 1.5], [.1, .8], [.9, .1]]], I: [[[.1, 1.5], [.7, 1.5]], [[.4, 1.5], [.4, .1]], [[.1, .1], [.7, .1]]], N: [[[.1, .1], [.1, 1.5], [.9, .1], [.9, 1.5]]], A: [[[.1, .1], [.5, 1.5], [.9, .1]], [[.25, .55], [.75, .55]]], M: [[[.1, .1], [.1, 1.5], [.6, .6], [1.1, 1.5], [1.1, .1]]], D: [[[.1, .1], [.1, 1.5], [.5, 1.5], [.9, 1.15], [.9, .45], [.5, .1], [.1, .1]]], O: [[[.3, 1.5], [.7, 1.5], [.9, 1.2], [.9, .4], [.7, .1], [.3, .1], [.1, .4], [.1, 1.2], [.3, 1.5]]], W: [[[.1, 1.5], [.35, .1], [.65, 1], [.95, .1], [1.2, 1.5]]] };
+      GLY["'"] = [[[.2, 1.5], [.2, 1.1]]];
+      const LM = M(0xfff8ea, { roughness: .55, emissive: 0xffecc8, emissiveIntensity: .12 }), lmesh = (g, x, y) => { const m = new T.Mesh(g, LM); m.position.set(x, y, 0); m.castShadow = m.receiveShadow = true; return m };
+      function glyph(ch, r) {
+        const st = GLY[ch], xs = st.flat().map(p => p[0]), mn = Math.min(...xs), g = new T.Group();
+        st.forEach(s => s.forEach((p, i) => {
+          const j = lmesh(SPH, p[0] - mn + r, p[1]); j.scale.setScalar(r); g.add(j);
+          if (i) { const a = s[i - 1], dx = p[0] - a[0], dy = p[1] - a[1], c = lmesh(new T.CylinderGeometry(r, r, Math.hypot(dx, dy), 10), (p[0] + a[0]) / 2 - mn + r, (p[1] + a[1]) / 2); c.rotation.z = Math.atan2(-dx, dy); g.add(c) }
+        }));
+        g.userData.w = Math.max(...xs) - mn + 2 * r; return g
       }
+      function word(t, r) { const g = new T.Group(), gs = [...t].map(c => glyph(c, r)), W = gs.reduce((a, q) => a + q.userData.w, 0) + .3 * (gs.length - 1); let x = -W / 2; gs.forEach(q => { q.position.x = x; x += q.userData.w + .3; g.add(q) }); return g }
       function pond() {
         const g = new T.Group(), pads = []; g.add(cyl(2.2, 2.2, .14, 0x8fd3dc, 0, .02, 0, 40, { roughness: .15, metalness: .15 }));
         for (let i = 0; i < 14; i++) { const a = i / 14 * 6.283; g.add(ell(.34, 0xd6cdbd, Math.sin(a) * 2.3, .1, Math.cos(a) * 2.3, 1, .7, 1)) }
@@ -526,7 +526,11 @@
       }
 
       // ---- compose the scene ----
-      fence(-7.2, -1.2, 5); bush(-1.4, 5, 1); { const s = signBoard(); s.position.set(-1, 0, -9.5); s.rotation.y = .08; s.scale.setScalar(.9); root.add(s) }
+      fence(-7.2, -1.2, 5); bush(-1.4, 5, 1); {
+        const ter = (rx, rz, h, x, z, c) => { const m = mk(new T.CylinderGeometry(1, 1.18, h, 32), c, x, h / 2, z); m.scale.set(rx, 1, rz); m.castShadow = false; root.add(m) };
+        ter(4.4, 1.7, 1.6, -2, -10.8, 0xa2cf78); ter(4, 1.5, .8, -2, -8.9, 0x9ccb72);
+        [["SHEKINA'S", 1.6, -10.8], ['MEADOW', .8, -8.9]].forEach(l => { const w = word(l[0], .17); w.position.set(-2, l[1], l[2]); w.rotation.y = .08; w.scale.set(.45, .45, .55); root.add(w) })
+      }
       for (let i = 0; i < 44; i++) {
         const x = -9 + ((i * 53) % 100) / 100 * 18, z = 1 + ((i * 37) % 100) / 100 * 9; if (Math.abs(x - 3) < 1.5 && z > 0 && z < 9 && Math.abs(x - (.4 + z * .25)) < 1.4) continue;
         const m = new T.Group(); m.add(cyl(.02, .02, .4, 0x6fae75, 0, .2, 0, 5), ell(.16, 0xfff8e8, 0, .42, 0, 1, .35, 1), ell(.07, 0xf7dc86, 0, .46, 0)); m.position.set(x, 0, z); m.traverse(a => a.castShadow = false); root.add(m)
