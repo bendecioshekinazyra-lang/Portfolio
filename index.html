@@ -190,6 +190,16 @@
       color: #c0566a
     }
 
+    body.zoom #panel[data-section="contact"] {
+      background: #fff8e8;
+      border-color: #d7bd98
+    }
+
+    body.zoom #panel[data-section="contact"] #pb {
+      font-family: cursive;
+      line-height: 1.6
+    }
+
     #panel li {
       margin: 6px 0
     }
@@ -305,18 +315,19 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
     (() => {
+      const contactEmail = 'bendecioshekinazyra@gmail.com';
       // ===== EDIT YOUR PORTFOLIO CONTENT HERE: id:[emoji,title,html] =====
       const SEC = {
         about: ['🐰', 'About Me', `<p>Hi, I’m <b>Shekina</b> – a designer with an engineering background who crafts warm, intuitive interfaces.</p><p>I love clean grids, tiny details, and thoughtful storytelling.</p>`],
         projects: ['🍄', 'Projects', `<ul><li><b>Moss &amp; Co.</b> – a plant-shop storefront</li><li><b>Pocket Atlas</b> – an offline travel journal</li><li><b>Tea Timer</b> – a tiny, delightful PWA</li></ul>`],
         house: ['🏡', 'Projects & Experience', `<p>Welcome in! The books in the cottage hold my <b>projects</b> and <b>experience</b>. Click one to take a closer look.</p>`],
-        p1: ['🌱', 'Moss & Co.', `<p>A calm, fast online store for an independent plant shop.</p><p><b>Role:</b> Design &amp; front-end<br><b>Stack:</b> React, Stripe, Three.js<br><b>Link:</b> example.com/moss</p>`, 1],
+        p1: ['🌱', 'Moss & Co.', `<p>Every design starts with an idea, and every idea has a story worth telling.</p><p><b>Role:</b> Junior Graphic Designer <br><b>Love:</b> Enhypen<br><b>Link:</b> secret</p>`, 1],
         p2: ['🧭', 'Pocket Atlas', `<p>An offline-first travel journal with hand-drawn maps.</p><p><b>Role:</b> Product design &amp; development<br><b>Stack:</b> TypeScript, PWA, IndexedDB<br><b>Link:</b> example.com/atlas</p>`, 1],
         p3: ['🍵', 'Tea Timer', `<p>A tiny, delightful tea-brewing timer that lives on your home screen.</p><p><b>Role:</b> Solo project<br><b>Stack:</b> Svelte, Web Audio<br><b>Link:</b> example.com/tea</p>`, 1],
         x1: ['📘', 'Acorn Studio', `<p><b>Senior Front-end Developer</b><br>2023 – now</p><ul><li>Led a design system used by 6 products</li><li>Cut page load times by 40%</li><li>Mentored 3 junior developers</li></ul>`, 1],
         x2: ['📙', 'Maple Labs', `<p><b>Product Designer</b><br>2020 – 2023</p><ul><li>Redesigned onboarding, +25% activation</li><li>Ran monthly user-research sessions</li></ul>`, 1],
         x3: ['📗', 'Clover Co.', `<p><b>Junior Developer</b><br>2018 – 2020</p><ul><li>Built client sites and email templates</li><li>Learned to love code reviews</li></ul>`, 1],
-        contact: ['💌', 'Contact', `<p>Let’s make something lovely together.</p><p><a href="mailto:bendecioshekinazyra@gmail.com">bendecioshekinazyra@gmail.com</a><br><a href="https://github.com/yourname" target="_blank" rel="noopener">github.com/yourname</a></p>`],
+        contact: ['💌', 'Contact', `<p>Thank you for wandering through my little meadow!</p><p>I'm glad our paths crossed. If you'd like to talk about a project, share an idea, ask a question, or simply say hello, I'd love to hear from you.</p><p>You can find me through these little corners of the internet:</p><p><a href="mailto:${contactEmail}">${contactEmail}</a></p>`],
         skills: ['🌸', 'Skills', `<p>Things growing in my garden:</p><ul><li>React, Three.js, TypeScript</li><li>UI/UX &amp; motion design</li><li>Accessibility &amp; performance</li></ul>`],
         experience: ['🌬️', 'Experience', `<ul><li><b>2023–now</b> · Senior Front-end Dev, Acorn Studio</li><li><b>2020–23</b> · Product Designer, Maple Labs</li><li><b>2018–20</b> · Junior Developer, Clover Co.</li></ul>`],
         education: ['🎓', 'Education', `<p><b>BSc, Interaction Design</b><br>Your University, 2014–2018</p><p>Plus lots of late-night books and online courses.</p>`],
@@ -419,7 +430,21 @@
       function book(t, s, e, col, w = 1.05, h = 1.35, content = '', kind = 'PROJECT') {
         const g = new T.Group(), body = new T.Group(), pages = [];
         body.position.x = -w / 2; g.add(body);
-        body.add(box(w, h, .18, 0xf2e8d6, w / 2, 0, 0), box(w + .1, h + .1, .06, col, w / 2, 0, -.12), box(.06, h + .1, .22, col, 0, 0, 0));
+        body.add(box(w, h, .18, 0xf2e8d6, w / 2, 0, 0), box(w + .1, h + .1, .06, col, w / 2, 0, -.12), box(.06, h + .1, .36, col, 0, 0, 0));
+        const spineCanvas = document.createElement('canvas'); spineCanvas.width = 128; spineCanvas.height = 640;
+        const spineCtx = spineCanvas.getContext('2d'), spineTexture = new T.CanvasTexture(spineCanvas);
+        const drawSpine = () => {
+          spineCtx.fillStyle = col; spineCtx.fillRect(0, 0, 128, 640);
+          spineCtx.strokeStyle = '#f9e9c2'; spineCtx.lineWidth = 5; spineCtx.strokeRect(6, 6, 116, 628);
+          spineCtx.fillStyle = '#5a3e2b'; spineCtx.textAlign = 'center'; spineCtx.textBaseline = 'middle';
+          spineCtx.font = '36px sans-serif'; spineCtx.fillText(e, 64, 54);
+          spineCtx.save(); spineCtx.translate(64, 360); spineCtx.rotate(-Math.PI / 2);
+          spineCtx.font = '600 30px Fredoka,sans-serif'; spineCtx.fillText(t, 0, 0, 520); spineCtx.restore();
+          spineTexture.needsUpdate = true
+        };
+        drawSpine(); if (document.fonts) document.fonts.ready.then(drawSpine);
+        const spineFace = new T.Mesh(new T.PlaneGeometry(.32, h - .12), new T.MeshStandardMaterial({ map: spineTexture, roughness: .9, side: T.DoubleSide }));
+        spineFace.position.set(-.031, 0, 0); spineFace.rotation.y = -Math.PI / 2; body.add(spineFace);
 
         const copy = document.createElement('div');
         copy.innerHTML = content;
@@ -526,7 +551,7 @@
         face.position.set(w / 2, 0, .152); face.castShadow = false; cover.add(face);
         const innerFace = new T.Mesh(new T.PlaneGeometry(w - .12, h - .12), new T.MeshStandardMaterial({ color: 0xf2e8d6, roughness: .95 }));
         innerFace.position.set(w / 2, 0, .088); innerFace.rotation.y = Math.PI; innerFace.castShadow = false; cover.add(innerFace); body.add(cover);
-        hit(g, .78, 0); g.userData.bookCenterX = w / 2; g.userData.spreads = spreads; g.userData.parts = { cover, pages, showSpread }; return g
+        hit(g, .18, 0); g.userData.bookCenterX = w / 2; g.userData.spreads = spreads; g.userData.parts = { cover, pages, showSpread }; return g
       }
       function bigTree() {
         const g = new T.Group(), f = new T.Group(), br = 0x8a5a3a; g.add(cyl(1, 1.5, 9, br, -8.5, 4.5, -1, 14));
@@ -577,13 +602,83 @@
         g.add(head); hit(g, .9, 1); g.userData.parts = { head }; return g
       }
       function mailbox() {
-        const g = new T.Group(), bx = new T.Group(), door = new T.Group(), flag = new T.Group(), env = new T.Group(), cr = 0xf3e6c8; bx.position.y = 1.75;
-        g.add(cyl(.12, .14, 1.7, 0x9a6a47, 0, .85, 0, 10), box(1.4, .18, .9, 0x9a6a47, 0, .2, 0)); bx.add(ell(.55, cr, 0, 0, 0, 1, .9, 1.5));
-        door.position.set(0, -.45, .8); const dd = cyl(.5, .5, .06, 0xe6d6b2, 0, .4, 0, 20); dd.rotation.x = Math.PI / 2; dd.scale.z = .9; door.add(dd);
-        const ca = cone(.1, .4, 0xf2a65a, .5, 0, .4, 8); ca.rotation.z = Math.PI / 2.5; bx.add(ca, ell(.08, 0x6fae75, .74, .1, .4));
-        flag.position.set(.6, .1, .1); flag.rotation.z = -1.5; flag.add(box(.06, .7, .06, 0xb98a6a, 0, .35, 0), box(.36, .22, .05, 0xe9605f, .2, .6, 0));
-        env.add(box(.5, .34, .04, 0xfffaf0, 0, 0, 0), ell(.07, 0xf08ca0, 0, 0, .03, 1, 1, .3)); env.position.set(0, 0, .3); env.visible = false;
-        bx.add(door, flag, env); g.add(bx); hit(g, .9, 1.7); g.userData.parts = { door, flag, env }; return g
+        const g = new T.Group(), bx = new T.Group(), door = new T.Group(), flag = new T.Group(), env = new T.Group();
+        const bodyGray = 0xc8cdd2, flapGray = 0xd9dde1, flagRed = 0xf28b8f;
+        const platformHeight = .24;
+        bx.position.y = platformHeight;
+        const archedShape = (width, spring, bottom = 0) => {
+          const shape = new T.Shape(), radius = width / 2;
+          shape.moveTo(-radius, bottom); shape.lineTo(radius, bottom); shape.lineTo(radius, spring);
+          shape.absarc(0, spring, radius, 0, Math.PI, false); shape.lineTo(-radius, bottom);
+          return shape
+        };
+        const innerRadius = .46, innerSpring = .39, innerBottom = .08;
+        const shellShape = archedShape(1.1, .42), cavityPath = new T.Path();
+        cavityPath.moveTo(-innerRadius, innerBottom); cavityPath.lineTo(-innerRadius, innerSpring);
+        cavityPath.absarc(0, innerSpring, innerRadius, Math.PI, 0, true);
+        cavityPath.lineTo(innerRadius, innerBottom); cavityPath.lineTo(-innerRadius, innerBottom);
+        shellShape.holes.push(cavityPath);
+        const shell = new T.ExtrudeGeometry(shellShape, { depth: 1.3, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: .025, bevelThickness: .025 });
+        shell.translate(0, 0, -.65);
+        bx.add(mk(shell, bodyGray, 0, 0, 0, { roughness: .4, metalness: .04 }));
+        bx.add(mk(new T.ShapeGeometry(archedShape(.9, .38, .09)), 0x9ca3aa, 0, 0, -.62, { side: T.DoubleSide, roughness: .75 }));
+        const flap = new T.ExtrudeGeometry(archedShape(1.02, .39), { depth: .045, bevelEnabled: false });
+        door.position.set(0, 0, .705); door.add(mk(flap, flapGray, 0, 0, 0, { roughness: .4, metalness: .03 }));
+        flag.position.set(.52, .42, .12);
+        flag.add(box(.075, .82, .07, flagRed, 0, .41, 0), box(.27, .2, .07, flagRed, .12, .82, 0));
+        env.add(box(.5, .34, .04, 0xfffaf0, 0, 0, 0), ell(.07, 0xf08ca0, 0, 0, .03, 1, 1, .3)); env.position.set(0, .1, .3); env.visible = false;
+        bx.add(door, flag, env);
+        g.add(box(1.05, platformHeight, .9, 0xc8935c, 0, platformHeight / 2, 0), bx);
+        hit(g, .85, .55); g.userData.parts = { bx, door, flag, env }; return g
+      }
+      function contactLetter() {
+        const texture = note => {
+          const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 600;
+          const ctx = canvas.getContext('2d'); ctx.fillStyle = note ? '#fff9ed' : '#e8a4a0'; ctx.fillRect(0, 0, 512, 600);
+          ctx.strokeStyle = note ? '#d9c8a9' : '#7f4e3e'; ctx.lineWidth = 9; ctx.strokeRect(16, 16, 480, 568);
+          if (note) {
+            ctx.fillStyle = '#76543e'; ctx.font = '38px cursive'; ctx.fillText("Dear Visitor,", 48, 86);
+            ctx.strokeStyle = '#e5c7b5'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(46, 112); ctx.lineTo(462, 112); ctx.stroke();
+            ctx.font = '22px cursive';
+            const drawText = (text, x, y, maxWidth, lineHeight) => {
+              const words = text.split(' ');
+              let line = '';
+              let cursorY = y;
+              words.forEach(word => {
+                const testLine = line ? `${line} ${word}` : word;
+                if (ctx.measureText(testLine).width > maxWidth && line) {
+                  ctx.fillText(line, x, cursorY, maxWidth);
+                  line = word;
+                  cursorY += lineHeight;
+                } else {
+                  line = testLine;
+                }
+              });
+              ctx.fillText(line, x, cursorY, maxWidth);
+              return cursorY + lineHeight;
+            };
+            let y = 158;
+            y = drawText('Thank you for wandering through my little meadow!', 42, y, 428, 30);
+            y += 18;
+            y = drawText("I'm glad our paths crossed. If you'd like to talk about a project, share an idea, ask a question, or simply say hello, I'd love to hear from you.", 42, y, 428, 27);
+            y += 18;
+            y = drawText('You can find me through these little corners of the internet:', 42, y, 428, 27);
+            y += 16;
+            ctx.font = '20px cursive';
+            ctx.fillText(contactEmail, 42, y, 428);
+          } else {
+            ctx.fillStyle = '#d98076'; ctx.beginPath(); ctx.moveTo(22, 24); ctx.lineTo(256, 265); ctx.lineTo(490, 24); ctx.closePath(); ctx.fill();
+            ctx.strokeStyle = '#7f4e3e'; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(22, 576); ctx.lineTo(256, 355); ctx.lineTo(490, 576); ctx.stroke();
+            ctx.fillStyle = '#e58f9c'; ctx.beginPath(); ctx.arc(256, 325, 48, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#fff8e8'; ctx.font = '48px cursive'; ctx.fillText('♥', 232, 341)
+          }
+          return new T.CanvasTexture(canvas)
+        };
+        const g = new T.Group(), paper = box(.64, .75, .026, 0xe8a4a0, 0, 0, 0);
+        const envelope = new T.Mesh(new T.PlaneGeometry(.62, .73), new T.MeshBasicMaterial({ map: texture(false), side: T.DoubleSide }));
+        const note = new T.Mesh(new T.PlaneGeometry(.62, .73), new T.MeshBasicMaterial({ map: texture(true), side: T.DoubleSide }));
+        envelope.position.z = note.position.z = .014; note.visible = false;
+        g.add(paper, envelope, note); g.userData.parts = { envelope, note }; return g
       }
       function windmill() {
         const g = new T.Group(), bl = new T.Group();
@@ -675,30 +770,47 @@
         const u = g.userData, ease = v => v * v * (3 - 2 * v), P = u.parts;
         g.rotation.z = 0; g.scale.setScalar(u.s0);
         if (u.bookClosing) {
-          const returnHome = ease(clamp((p - .62) / .38, 0, 1));
+          const returnToPullback = ease(clamp((p - .42) / .28, 0, 1));
+          const returnToShelf = ease(clamp((p - .70) / .24, 0, 1));
           const closePosition = u.bookClosePosition || u.bookDisplay;
-          g.position.set(
-            closePosition.x + (u.bookHome.x - closePosition.x) * returnHome,
-            u.y0,
-            closePosition.z + (u.bookHome.z - closePosition.z) * returnHome
-          );
+          const pullback = u.bookPullback;
+          if (p < .70) {
+            g.position.set(
+              closePosition.x + (pullback.x - closePosition.x) * returnToPullback,
+              u.y0,
+              closePosition.z + (pullback.z - closePosition.z) * returnToPullback
+            )
+          } else {
+            g.position.set(
+              pullback.x + (u.bookHome.x - pullback.x) * returnToShelf,
+              u.y0,
+              pullback.z + (u.bookHome.z - pullback.z) * returnToShelf
+            )
+          }
+          g.rotation.y = u.bookCloseRotationY + (u.r0 - u.bookCloseRotationY) * returnToPullback;
           P.pages.forEach((page, i) => {
             const delay = .03 + (P.pages.length - 1 - i) * .02;
             const close = ease(clamp((p - delay) / .25, 0, 1));
             page.rotation.y = u.bookPageAngles[i] * (1 - close)
           });
-          const coverClose = ease(clamp((p - .42) / .24, 0, 1));
+          const coverClose = ease(clamp((p - .18) / .24, 0, 1));
           P.cover.rotation.y = u.bookCloseAngle * (1 - coverClose)
         } else {
-          const travel = ease(clamp(p / .45, 0, 1));
-          g.position.set(
-            u.bookHome.x + (u.bookDisplay.x - u.bookHome.x) * travel,
-            u.y0,
-            u.bookHome.z + (u.bookDisplay.z - u.bookHome.z) * travel
-          );
-          P.cover.rotation.y = -Math.PI * ease(clamp((p - .32) / .34, 0, 1));
+          const pullOut = ease(clamp(p / .24, 0, 1)), center = ease(clamp((p - .24) / .28, 0, 1));
+          const pullback = u.bookPullback;
+          if (p < .24) {
+            g.position.set(u.bookHome.x, u.y0, u.bookHome.z + (pullback.z - u.bookHome.z) * pullOut)
+          } else {
+            g.position.set(
+              pullback.x + (u.bookDisplay.x - pullback.x) * center,
+              u.y0,
+              pullback.z + (u.bookDisplay.z - pullback.z) * center
+            )
+          }
+          g.rotation.y = u.r0 * (1 - center);
+          P.cover.rotation.y = -Math.PI * ease(clamp((p - .52) / .32, 0, 1));
           P.pages.forEach((page, i) => {
-            const progress = ease(clamp((p - .55 - i * .045) / .32, 0, 1));
+            const progress = ease(clamp((p - .62 - i * .03) / .28, 0, 1));
             page.rotation.y = i < P.pages.length / 2 ? -Math.PI * progress : 0
           })
         }
@@ -716,20 +828,128 @@
         houseG.add(readingLight); houseG.userData.parts.readingLight = readingLight;
         houseG.add(box(.12, 1.6, 1.7, 0x8a5a3a, -2.7, 1.6, -.4));[1, 1.6, 2.2].forEach((y, r) => { houseG.add(box(.4, .06, 1.7, 0x9a6a47, -2.55, y, -.4)); for (let i = 0; i < 6; i++) { const h = .4 + ((i * 5 + r) % 3) * .1; houseG.add(box(.2, h, .16, [0xe58f9c, 0x8fbf8f, 0xf7dc86, 0x9bb7e6, 0xc9b3ee][(i + r) % 5], -2.55, y + .03 + h / 2, -1.05 + i * .27)) } });
         houseG.add(box(.1, 1.3, 1.5, 0x8a5a3a, 2.7, 2, -.4), mk(new T.BoxGeometry(.06, 1.1, 1.3), 0xbfe6ee, 2.65, 2, -.4, { emissive: 0xbfe6ee, emissiveIntensity: .8 }), box(.08, .06, 1.3, 0x8a5a3a, 2.63, 2, -.4), box(.08, 1.1, .06, 0x8a5a3a, 2.63, 2, -.4), box(.1, 1.5, .35, 0xf5b5c5, 2.62, 2, -1.2), box(.1, 1.5, .35, 0xf5b5c5, 2.62, 2, .4));
-        houseG.add(cyl(.1, .09, .18, 0xfff3da, -.95, 1.29, -1.3, 12), cyl(.09, .12, .3, 0xe58f9c, .95, 1.35, -1.3, 10), ell(.12, 0xf7dc86, .95, 1.6, -1.3));
-        [['p1', 'Moss & Co.', 'Plant-shop storefront', '🌱', '#a9d4a0', -2.1], ['p2', 'Pocket Atlas', 'Offline travel journal', '🧭', '#f0b0b5', -1.26], ['p3', 'Tea Timer', 'A tiny, cozy PWA', '🍵', '#f5d27a', -.42]]
-          .forEach(f => R(book(f[1], f[2], f[3], f[4], 1.05, 1.35, SEC[f[0]][2], 'PROJECT'), f[0], f[3] + ' ' + f[1], 1, f[5], -1.35, 0, .68, { par: houseG, y: 1.66, inner: 1, zoom: 1.2, d: 1200, fx: bookMagic }));
-        [['x1', 'Acorn Studio', 'Senior Front-end', '📘', '#a9c4f0', .42], ['x2', 'Maple Labs', 'Product Designer', '📙', '#f5c99a', 1.26], ['x3', 'Clover Co.', 'Junior Developer', '📗', '#b5dcc0', 2.1]]
-          .forEach(f => R(book(f[1], f[2], f[3], f[4], 1.05, 1.35, SEC[f[0]][2], 'EXPERIENCE'), f[0], f[3] + ' ' + f[1], 1, f[5], -1.35, 0, .68, { par: houseG, y: 1.66, inner: 1, zoom: 1.2, d: 1200, fx: bookMagic }))
+        houseG.add(cyl(.1, .09, .18, 0xfff3da, -2.3, 1.29, -1.3, 12), cyl(.09, .12, .3, 0xe58f9c, .95, 1.35, -1.3, 10), ell(.12, 0xf7dc86, .95, 1.6, -1.3));
+        [['p1', 'Where My Creative Journey Took Root', 'Pedi App Journey', '', '#a9d4a0', -1.45], ['p2', 'Growing Alongside Others', 'Offline travel journal', '', '#f0b0b5', -.87], ['p3', 'A World Behind the Screen', 'A tiny, cozy PWA', '', '#f5d27a', -.29]]
+          .forEach(f => R(book(f[1], f[2], f[3], f[4], 1.05, 1.35, SEC[f[0]][2], 'PROJECT'), f[0], f[3] + ' ' + f[1], 1, f[5], -1.35, Math.PI / 2, 1, { par: houseG, y: 1.9, inner: 1, zoom: 1.7, d: 1200, fx: bookMagic }));
+        [['x1', 'Letters Made with Purpose', 'Junior Graphic Designer', '', '#a9c4f0', .29], ['x2', 'Little Things I Have Brought to Life', 'Product Designer', '', '#f5c99a', .87], ['x3', 'Growing Through Service', 'Junior Developer', '', '#b5dcc0', 1.45]]
+          .forEach(f => R(book(f[1], f[2], f[3], f[4], 1.05, 1.35, SEC[f[0]][2], 'EXPERIENCE'), f[0], f[3] + ' ' + f[1], 1, f[5], -1.35, Math.PI / 2, 1, { par: houseG, y: 1.9, inner: 1, zoom: 1.7, d: 1200, fx: bookMagic }))
       }
       const mfx = (g, p) => { const u = g.userData; u.parts.cap.position.y = 1.4 + .22 * Math.min(1, bell(p) * 1.7); u.parts.win.forEach(w => w.material.emissiveIntensity = .6 + 1.2 * bell(p)); g.scale.setScalar(u.s0 * (1 + .03 * bell(p))) };
       R(mush(1, 0xe97b7b), 'hobbies', '🍄 Hobbies', 3.3, 5.6, 6.4, -.4, .8, { blob: 1.3, dot: 1, main: 1, d: 1500, fx: mfx });
-      R(mailbox(), 'contact', '💌 Contact', 3, .7, 4.3, -.1, 1.15, {
-        blob: .8, dot: 1, main: 1, d: 2500, fx: (g, p) => {
-          const P = g.userData.parts, o = Math.min(1, p / .15) * (p > .85 ? 1 - (p - .85) / .15 : 1); P.door.rotation.x = 1.1 * o; P.flag.rotation.z = -1.1 * (1 - o);
-          const q = clamp((p - .15) / .75, 0, 1); P.env.visible = p > .15 && p < .95; P.env.position.set(0, .2 + q * 1.4, .3 + q * .5); P.env.rotation.y = q * 2.8; P.env.scale.setScalar(1 + q * .12)
+      const mailboxG = R(mailbox(), 'contact', '💌 Contact', 1.2, -6.4, 5.12, -.1, 1.15, {
+        y: 1.525, zoom: 4.2, dot: 1, main: 1, d: 1500, fx: (g, p) => {
+          const u = g.userData, P = u.parts, ease = v => v * v * (3 - 2 * v);
+          if (u.mailboxClosing) {
+            P.door.rotation.x = 1.1 * (1 - ease(clamp(p, 0, 1)));
+            if (p >= 1) { u.mailboxClosing = false; u.mailboxOpen = false; u.mailboxExitRequested = false; P.letter.visible = false }
+          } else {
+            P.door.rotation.x = 1.1 * ease(clamp(p / .8, 0, 1));
+            if (u.mailboxOpening) {
+              const letter = P.letter.userData, reveal = ease(clamp((p - .8) / .2, 0, 1));
+              if (p >= .8) P.letter.visible = true;
+              if (reveal < .35) {
+                const q = ease(reveal / .35);
+                P.letter.position.lerpVectors(letter.letterStowed, letter.letterInlet, q);
+                P.letter.rotation.x = letter.letterStowedRotation
+              } else if (reveal < .8) {
+                const q = ease((reveal - .35) / .45);
+                P.letter.position.lerpVectors(letter.letterInlet, letter.letterAbove, q);
+                P.letter.rotation.x = letter.letterStowedRotation
+              } else {
+                const q = ease((reveal - .8) / .2);
+                P.letter.position.lerpVectors(letter.letterAbove, letter.letterHome, q);
+                P.letter.rotation.x = letter.letterStowedRotation + (letter.letterOpenRotation - letter.letterStowedRotation) * q
+              }
+            }
+            if (u.mailboxOpening && p >= 1) {
+              u.mailboxOpening = false; u.mailboxOpen = true; P.letter.visible = true;
+              if (u.mailboxExitRequested) stowMailboxLetter(g)
+            }
+          }
         }
       });
+      function closeMailbox(g) {
+        const u = g.userData;
+        if (!u.mailboxOpen || u.mailboxClosing) return;
+        u.mailboxClosing = true; u.anim = { t0: performance.now(), d: 1400 }
+      }
+      function stowMailboxLetter(g) {
+        const u = g.userData, letter = u.parts.letter.userData;
+        if (!u.mailboxOpen || u.mailboxClosing || letter.contactAnimating || letter.returning) return;
+        letter.stowing = true; letter.contactAnimating = true; letter.anim = { t0: performance.now(), d: 800 }
+      }
+      function returnContactLetter(g) {
+        const u = g.userData;
+        if (u.returning || u.stowing) return;
+        u.returnStart = g.position.clone(); u.returnStartRotation = g.rotation.x;
+        u.returning = true; u.contactAnimating = true; u.focusStarted = false;
+        u.anim = { t0: performance.now(), d: 1100 }
+      }
+      const contactLetterG = R(contactLetter(), 'contactLetter', '💌 Read the letter', .8, 0, 1.09, 0, 1.15, {
+        par: mailboxG.userData.parts.bx, y: .22, contactLetter: true, sectionId: 'contact', zoom: 2.3, d: 1000,
+        fx: (g, p) => {
+          const u = g.userData, ease = v => v * v * (3 - 2 * v);
+          const progress = clamp(p, 0, 1), stowing = u.returning || u.stowing;
+          if (u.returning) {
+            if (progress < .4) {
+              const q = ease(progress / .4);
+              g.position.lerpVectors(u.returnStart || u.letterDisplay, u.letterClear, q);
+              const startRotation = u.returnStartRotation ?? 0;
+              g.rotation.x = startRotation + (u.letterOpenRotation - startRotation) * q
+            } else if (progress < .6) {
+              const q = ease((progress - .4) / .2);
+              g.position.lerpVectors(u.letterClear, u.letterAbove, q);
+              g.rotation.x = u.letterOpenRotation + (u.letterStowedRotation - u.letterOpenRotation) * q
+            } else if (progress < .9) {
+              const q = ease((progress - .6) / .3);
+              g.position.lerpVectors(u.letterAbove, u.letterInlet, q); g.rotation.x = u.letterStowedRotation
+            } else {
+              const q = ease((progress - .9) / .1);
+              g.position.lerpVectors(u.letterInlet, u.letterStowed, q); g.rotation.x = u.letterStowedRotation
+            }
+          } else if (u.stowing) {
+            if (progress < .3) {
+              const q = ease(progress / .3);
+              g.position.lerpVectors(u.letterHome, u.letterAbove, q);
+              g.rotation.x = u.letterOpenRotation + (u.letterStowedRotation - u.letterOpenRotation) * q
+            } else if (progress < .75) {
+              const q = ease((progress - .3) / .45);
+              g.position.lerpVectors(u.letterAbove, u.letterInlet, q); g.rotation.x = u.letterStowedRotation
+            } else {
+              const q = ease((progress - .75) / .25);
+              g.position.lerpVectors(u.letterInlet, u.letterStowed, q); g.rotation.x = u.letterStowedRotation
+            }
+          } else if (progress < .38) {
+            const q = ease(progress / .38);
+            g.position.lerpVectors(u.letterHome, u.letterClear, q); g.rotation.x = u.letterOpenRotation
+          } else {
+            const q = ease((progress - .38) / .62);
+            g.position.lerpVectors(u.letterClear, u.letterDisplay, q);
+            g.rotation.x = u.letterOpenRotation * (1 - q)
+          }
+          if (!u.returning && !u.stowing && p >= .78) { u.parts.envelope.visible = false; u.parts.note.visible = true }
+          if (!u.returning && !u.stowing && p >= 1 && !u.focusStarted && !u.mailbox.userData.mailboxExitRequested) { u.focusStarted = true; focusOn(g) }
+          if (stowing && p >= 1) {
+            u.parts.envelope.visible = true; u.parts.note.visible = false;
+            g.position.copy(u.letterStowed); g.rotation.x = u.letterStowedRotation;
+            u.returning = false; u.stowing = false; u.contactAnimating = false; u.focusStarted = false;
+            delete u.returnStart; delete u.returnStartRotation;
+            closeMailbox(u.mailbox)
+          }
+        }
+      });
+      contactLetterG.visible = false; contactLetterG.userData.mailbox = mailboxG;
+      contactLetterG.userData.letterOpenRotation = 1.1 - Math.PI;
+      contactLetterG.userData.letterStowedRotation = -Math.PI / 2;
+      contactLetterG.rotation.x = contactLetterG.userData.letterStowedRotation;
+      contactLetterG.userData.letterHome = contactLetterG.position.clone();
+      contactLetterG.userData.letterStowed = new T.Vector3(0, .12, .12);
+      contactLetterG.userData.letterInlet = new T.Vector3(0, .58, .2);
+      contactLetterG.userData.letterAbove = new T.Vector3(0, .58, 1.1);
+      contactLetterG.userData.letterClear = new T.Vector3(0, 1.25, 1.45);
+      contactLetterG.position.copy(contactLetterG.userData.letterStowed);
+      contactLetterG.userData.letterDisplay = new T.Vector3(0, 1.15, 2.1);
+      mailboxG.userData.parts.letter = contactLetterG;
       R(hydra(), 'skills', '🌷 Skills', 1.35, -1, 7.6, 0, 1.1, { blob: 1.8, dot: 1, main: 1, zoom: 4.2, d: 1800, fx: (g, p) => g.userData.parts.heads.forEach((h, i) => { const q = clamp((p * 1.5 - i * .12) / .6, 0, 1); h.scale.setScalar(.15 + .85 * q * q * (3 - 2 * q)) }) });
       R(pond(), 'blog', '🪷 Writing', .6, -2.6, -4, 0, 1.3, { dot: 1, d: 1700, fx: (g, p) => { const P = g.userData.parts; P.ring.scale.setScalar(1 + p * .35); P.ring.material.opacity = .8 * (1 - p) * (p > 0); P.pads.forEach((l, i) => l.rotation.y = Math.sin(p * 6 + i) * .1 * (1 - p)) } });
       const wx = -3, wz = -21; R(windmill(), 'education', '🌬️ Education', 9, wx, wz, .2, 1.5, { y: H(wx, wz) - .1, dot: 1, main: 1, d: 1500 });
@@ -754,20 +974,41 @@
       const cv = renderer.domElement;
       function pick(e) {
         mv.set(e.clientX / W * 2 - 1, -e.clientY / H_ * 2 + 1); ray.setFromCamera(mv, cam);
+        if (fg?.userData.id === 'contact') {
+          const letter = fg.userData.parts.letter;
+          return letter.visible && !fg.userData.mailboxClosing && ray.intersectObject(letter, true).length ? letter : null
+        }
         if (fg) return fg.userData.parts.cover && ray.intersectObject(fg, true).length ? fg : null;
-        const hs = ray.intersectObjects(hot, true); let fb = null; for (const i of hs) { let o = i.object; while (o && !o.userData.id) o = o.parent; if (!o) continue; const u = o.userData; if (u.id === 'house' ? stage !== 0 : u.inner ? stage !== 3 : stage !== 0) continue; if (!i.object.userData.hit || u.fly) return o; fb = fb || o } return fb
+        const hs = ray.intersectObjects(hot, true); let fb = null; for (const i of hs) { let o = i.object; while (o && !o.userData.id) o = o.parent; if (!o) continue; const u = o.userData; if (u.contactLetter && (!o.visible || !u.mailbox.userData.mailboxOpen || u.mailbox.userData.mailboxClosing)) continue; if (u.id === 'house' ? stage !== 0 : u.inner ? stage !== 3 : stage !== 0) continue; if (!i.object.userData.hit || u.fly) return o; fb = fb || o } return fb
       }
       function enterHouse() { stage = 1; document.body.classList.add('in'); closeSec() }
       function exitHouse() { if (stage === 0 || stage >= 4) return; if (openingBook) closeBook(openingBook); stage = stage === 1 ? 5 : 4; closeSec(); document.body.classList.remove('in') }
       activate = g => {
         const u = g.userData;
         if (u.id === 'house') { if (stage === 0) { u.anim = { t0: performance.now(), d: u.d || 1300 }; enterHouse() } return }
-        if (stage !== (u.inner ? 3 : 0) || fg) return;
+        if (stage !== (u.inner ? 3 : 0) || fg && (!fdir || !(u.contactLetter && fg === u.mailbox))) return;
+        if (u.contactLetter) {
+          const mailbox = u.mailbox.userData;
+          if (!mailbox.mailboxOpen || mailbox.mailboxOpening || mailbox.mailboxClosing || u.contactAnimating || u.returning || u.stowing) return;
+          u.contactAnimating = true; u.focusStarted = false; u.anim = { t0: performance.now(), d: u.d || 1000 };
+          return
+        }
+        if (u.id === 'contact') {
+          if (u.mailboxOpen) {
+            stowMailboxLetter(g);
+            return
+          }
+          if (u.mailboxOpening || u.mailboxClosing) return;
+          u.mailboxExitRequested = false;
+          u.mailboxOpening = true; u.anim = { t0: performance.now(), d: u.d || 900 };
+          focusOn(g)
+          return
+        }
         if (u.inner) {
           if (openingBook === g) { closeBook(g); return }
           if (openingBook) return;
           openingBook = g; u.bookClosing = false; u.bookOpening = true; u.anim = { t0: performance.now(), d: u.d || 1300 };
-          u.bookHome = g.position.clone(); u.bookDisplay = new T.Vector3(u.bookCenterX, u.y0, -.2);
+          u.bookHome = g.position.clone(); u.bookPullback = new T.Vector3(u.bookHome.x, u.y0, u.bookHome.z + .7); u.bookDisplay = new T.Vector3(u.bookCenterX, u.y0, -.2);
           u.bookTurnCount = 0; u.parts.showSpread(0);
           houseG.userData.parts.readingLight.visible = false;
           return
@@ -792,25 +1033,43 @@
         if (openingBook === g) openingBook = null;
         u.bookOpening = false; u.bookClosing = true; u.bookOpen = false;
         u.bookCloseAngle = u.parts.cover.rotation.y;
+        u.bookCloseRotationY = g.rotation.y;
         u.bookPageAngles = u.parts.pages.map(page => page.rotation.y);
         u.pageTurn = null;
         u.bookClosePosition = g.position.clone();
         u.bookDisplay ||= g.position.clone(); u.bookHome ||= g.position.clone();
-        u.anim = { t0: performance.now(), d: 800 }
+        u.anim = { t0: performance.now(), d: u.d || 1300 }
       }
       function focusOn(g) {
+        const previous = fg;
         g.updateMatrixWorld(true); const b = new T.Box3(), tb = new T.Box3(), u = g.userData; g.traverse(m => { if (m.isMesh && !m.userData.hit) { m.geometry.boundingBox || m.geometry.computeBoundingBox(); tb.copy(m.geometry.boundingBox).applyMatrix4(m.matrixWorld); b.union(tb) } });
         const c = b.getCenter(new T.Vector3()), r = b.getSize(new T.Vector3()).length() / 2; u.focusBounds = b.clone(); u.foff = u.fly ? new T.Vector3() : c.sub(g.getWorldPosition(new T.Vector3())); u.fd = u.zoom ? u.zoom : clamp(r * 2.8, 3.5, 24);
+        if (previous && previous !== g) {
+          u.focusFromPrevious = true; u.focusStartPos = cam.position.clone();
+          u.focusStartLook = previous.getWorldPosition(new T.Vector3()).add(previous.userData.foff || new T.Vector3());
+          u.focusStartDir = u.focusStartPos.clone().sub(u.focusStartLook); u.focusStartDir.y = 0; u.focusStartDir.normalize(); fz = 0
+        } else u.focusFromPrevious = false;
         fg = g; fdir = 1; document.body.classList.add('in', 'zoom'); closeSec(); clearTimeout(ft);
         if (u.parts.cover) { u.focusDir = g.getWorldDirection(new T.Vector3()).normalize(); $('#bk').textContent = '← Close book'; tip.style.opacity = 0 }
-        else { $('#bk').textContent = '← Back to the garden'; ft = setTimeout(() => openSec(u.id, g), 1100) }
+        else if (u.id === 'contact' || u.contactLetter) {
+          $('#bk').textContent = '← Back to the village'; tip.style.opacity = 0;
+        } else { $('#bk').textContent = '← Back to the garden'; ft = setTimeout(() => openSec(u.id, g), 1100) }
       }
       function unfocus() {
         if (!fg || !fdir) return;
         const u = fg.userData;
         const isBook = !!u.parts.cover;
         if (isBook) closeBook(fg);
-        fdir = 0; clearTimeout(ft); closeSec();
+        else if (u.contactLetter) {
+          u.mailbox.userData.mailboxExitRequested = true;
+          returnContactLetter(fg)
+        } else if (u.id === 'contact') {
+          u.mailboxExitRequested = true;
+          const letterState = u.parts.letter.userData;
+          if (letterState.contactAnimating && !letterState.returning && !letterState.stowing) returnContactLetter(u.parts.letter);
+          else if (u.mailboxOpen) stowMailboxLetter(fg)
+        }
+        fdir = 0; clearTimeout(ft); closeSec(); hov = null; tip.style.opacity = 0; cv.style.cursor = 'default';
         if (isBook && stage === 3) { document.body.classList.add('in'); document.body.classList.remove('zoom') }
         else document.body.classList.remove('in', 'zoom');
         $('#bk').textContent = '← Back to the garden'
@@ -849,7 +1108,20 @@
         const ei = sm(ins); sun.intensity = 1.05 * (1 - .58 * ei); hemi.intensity = .85 * (1 - .58 * ei); cam.fov = (asp < .9 ? 46 : 34) * (1 - ei) + (asp < .9 ? 74 : 56) * ei;
         cam.position.set(0, 3.4 + (D - 17) * .18, D); const lk = new T.Vector3(0, 2.3, 0);
         if (ei > 0) { houseG.updateMatrixWorld(true); const pc = new T.CatmullRomCurve3([cam.position.clone(), LP(0, 1.5, 6.2), LP(0, 1.5, 2.5), LP(0, 1.75, 1.5)], false, 'centripetal'), lc = new T.CatmullRomCurve3([lk.clone(), LP(0, 1.5, 2), LP(0, 1.8, -.6), LP(0, 1.9, -2)], false, 'centripetal'); cam.position.copy(pc.getPointAt(ei)); lk.copy(lc.getPointAt(ei)) }
-        if (fg) { fz = clamp(fz + (fdir ? dt : -dt) / 1.4, 0, 1); if (!fdir && fz <= 0) fg = null; else { const u = fg.userData, ef = sm(fz), tg = fg.getWorldPosition(new T.Vector3()).add(u.foff), dx = cam.position.x - tg.x, dz = cam.position.z - tg.z, dl = Math.hypot(dx, dz) || 1, el = u.focusDir ? 0 : .28, distance = Math.cos(el) * u.fd, P = u.focusDir ? new T.Vector3(tg.x + u.focusDir.x * distance, Math.max(tg.y + Math.sin(el) * u.fd, .8), tg.z + u.focusDir.z * distance) : new T.Vector3(tg.x + dx / dl * distance, Math.max(tg.y + Math.sin(el) * u.fd, .8), tg.z + dz / dl * distance); cam.position.lerp(P, ef); lk.lerp(tg, ef) } }
+        if (fg) {
+          fz = clamp(fz + (fdir ? dt : -dt) / 1.4, 0, 1);
+          if (!fdir && fz <= 0) fg = null;
+          else {
+            const u = fg.userData, ef = sm(fz), tg = fg.getWorldPosition(new T.Vector3()).add(u.foff);
+            const origin = fdir && u.focusFromPrevious ? u.focusStartPos : cam.position;
+            const dx = origin.x - tg.x, dz = origin.z - tg.z, dl = Math.hypot(dx, dz) || 1, el = u.focusDir ? 0 : .28, distance = Math.cos(el) * u.fd;
+            const hx = u.focusFromPrevious ? u.focusStartDir.x : dx / dl, hz = u.focusFromPrevious ? u.focusStartDir.z : dz / dl;
+            const P = u.focusDir ? new T.Vector3(tg.x + u.focusDir.x * distance, Math.max(tg.y + Math.sin(el) * u.fd, .8), tg.z + u.focusDir.z * distance) : new T.Vector3(tg.x + hx * distance, Math.max(tg.y + Math.sin(el) * u.fd, .8), tg.z + hz * distance);
+            if (fdir && u.focusFromPrevious) {
+              cam.position.lerpVectors(u.focusStartPos, P, ef); lk.lerpVectors(u.focusStartLook, tg, ef)
+            } else { cam.position.lerp(P, ef); lk.lerp(tg, ef) }
+          }
+        }
         cam.lookAt(lk); cam.aspect = asp;
         const mob = W < 700;
         cam.setViewOffset(W, H_, mob ? 0 : shift * W * .17, mob ? shift * H_ * .16 : 0, W, H_);
@@ -860,7 +1132,7 @@
           u.k += ((on ? 1 : 0) - u.k) * Math.min(1, dt * 10); glow(g, on);
           if (settledBook) g.scale.setScalar(u.s0);
           else g.scale.setScalar(u.s0 * (1 + u.k * .025 + (on ? Math.sin(t * 4) * .004 : 0)));
-          if (!u.fly && !settledBook) g.position.y = u.y0 + u.k * .03 * (.5 + .5 * Math.sin(t * 4));
+          if (!u.fly && !settledBook && !u.contactLetter) g.position.y = u.y0 + u.k * .03 * (.5 + .5 * Math.sin(t * 4));
           if (u.f) { const f = u.f, a = t * f.sp + f.ph;
             if (f.wander) g.position.set(f.cx + Math.cos(a) * f.rx + Math.sin(a * 2.3) * 2.5, f.h + Math.sin(a * 3) * 1.1, f.cz + Math.sin(a * 1.2) * f.rz);
             else g.position.set(f.cx + Math.cos(a) * f.r, f.h + Math.sin(a * 2) * .4, f.cz + Math.sin(a) * f.r);
@@ -882,7 +1154,7 @@
             const p = (now - u.anim.t0) / u.anim.d;
             if (u.fx) u.fx(g, Math.min(p, 1));
             if (p >= 1) {
-              u.anim = null; g.rotation.y = u.r0; g.rotation.z = 0;
+              u.anim = null; g.rotation.y = u.bookOpening ? 0 : u.r0; g.rotation.z = 0;
               if (u.bookClosing) { u.bookClosing = false; u.bookCloseAngle = 0; u.bookPageAngles = []; houseG.userData.parts.readingLight.visible = true }
               else if (u.bookOpening) {
                 u.bookOpening = false; u.bookOpen = true; u.bookTurnCount = 0;
@@ -892,7 +1164,7 @@
           }
         });
         renderer.render(scene, cam);
-        if (hov && !(fg && fg.userData.parts.cover)) { const p = scr(hov); tip.textContent = hov.userData.lab; tip.style.transform = `translate(${p.x}px,${p.y - 12}px) translate(-50%,-100%)`; tip.style.opacity = 1 } else tip.style.opacity = 0;
+        if (hov && hov.userData.id !== 'contact' && !hov.userData.contactLetter && !(fg && (fg.userData.parts.cover || fg.userData.contactLetter))) { const p = scr(hov); tip.textContent = hov.userData.lab; tip.style.transform = `translate(${p.x}px,${p.y - 12}px) translate(-50%,-100%)`; tip.style.opacity = 1 } else tip.style.opacity = 0;
       }
       frame();
     })();
